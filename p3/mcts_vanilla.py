@@ -1,3 +1,7 @@
+"""
+Structure from
+https://www.geeksforgeeks.org/ml-monte-carlo-tree-search-mcts/
+"""
 
 from mcts_node import MCTSNode
 from random import choice
@@ -5,6 +9,7 @@ from math import sqrt, log
 
 num_nodes = 1000
 explore_faction = 2.
+
 
 def traverse_nodes(node, board, state, identity):
     """ Traverses the tree until the end criterion are met.
@@ -18,8 +23,23 @@ def traverse_nodes(node, board, state, identity):
     Returns:        A node from which the next stage of the search can proceed.
 
     """
-    pass
-    # Hint: return leaf_node
+    if node.untried_actions:
+        return node
+    bestChild = node
+    bestValue = 0
+
+    while not bestChild.untried_actions:  # while the current node has tried all of its actions
+        for n in node.child_nodes:  # pick the best one
+            value = n.wins + explore_faction * sqrt(log(node.visits) / n.visits)
+            if identity is "red" and bestValue <= value:
+                bestChild = n
+                bestValue = value
+            if identity is "blue" and bestValue >= value:
+                bestChild = n
+                bestValue = value
+
+    bestChild.visits += 1
+    return bestChild
 
 
 def expand_leaf(node, board, state):
@@ -33,7 +53,12 @@ def expand_leaf(node, board, state):
     Returns:    The added child node.
 
     """
-    pass
+    print(choice(node.untried_actions))
+    # action = choice(board.legal_actions(state))
+    action = choice(node.untried_actions)
+    newChild = MCTSNode(node, action, board.next_state(state, action))
+    node.child_nodes[action: newChild]
+    return newChild
     # Hint: return new_node
 
 
@@ -43,9 +68,12 @@ def rollout(board, state):
     Args:
         board:  The game setup.
         state:  The state of the game.
-
     """
-    pass
+    while not board.is_ended(state):
+        choice(board.legal_actions)  # random choice
+        board.next_state(state, choice)
+
+    return board.points_value
 
 
 def backpropagate(node, won):
@@ -56,7 +84,10 @@ def backpropagate(node, won):
         won:    An indicator of whether the bot won or lost the game.
 
     """
-    pass
+    if node.parent is None:
+        return
+    node.wins += won
+    backpropagate(node.parent, won)
 
 
 def think(board, state):
@@ -80,7 +111,18 @@ def think(board, state):
         node = root_node
 
         # Do MCTS - This is all you!
+        leaf = traverse_nodes(node, board, sampled_game, identity_of_bot)
+        expand_leaf(leaf, board, sampled_game)
+        won = rollout(board, state)
+        if won:
+            backpropagate(leaf, won[identity_of_bot])
 
     # Return an action, typically the most frequently used action (from the root) or the action with the best
     # estimated win rate.
-    return None
+    action = None
+    bestChance = -1
+    for child in root_node.child_nodes:
+        if child.wins > bestChance:
+            action = child.parent_action
+            bestChance = child.wins
+    return action
