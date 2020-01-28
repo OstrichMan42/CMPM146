@@ -53,11 +53,11 @@ def expand_leaf(node, board, state):
     Returns:    The added child node.
 
     """
-    print(choice(node.untried_actions))
-    # action = choice(board.legal_actions(state))
+    #print("untried actions: ", node.untried_actions)
     action = choice(node.untried_actions)
+    #print("new node from action: ", action, type(action))
     newChild = MCTSNode(node, action, board.next_state(state, action))
-    node.child_nodes[action: newChild]
+    node.child_nodes[action] = newChild
     return newChild
     # Hint: return new_node
 
@@ -69,11 +69,12 @@ def rollout(board, state):
         board:  The game setup.
         state:  The state of the game.
     """
-    while not board.is_ended(state):
-        choice(board.legal_actions)  # random choice
-        board.next_state(state, choice)
+    simState = state
+    while not board.is_ended(simState):
+        move = choice(board.legal_actions(simState))  # random choice
+        simState = board.next_state(simState, move)
 
-    return board.points_value
+    return board.points_values(simState)
 
 
 def backpropagate(node, won):
@@ -121,7 +122,8 @@ def think(board, state):
     # estimated win rate.
     action = None
     bestChance = -1
-    for child in root_node.child_nodes:
+    for move in root_node.child_nodes.keys():
+        child = root_node.child_nodes[move]
         if child.wins > bestChance:
             action = child.parent_action
             bestChance = child.wins
