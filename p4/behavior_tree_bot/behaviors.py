@@ -8,8 +8,10 @@ from planet_wars import issue_order
 from checks import closest_friendly, closest_enemy, reaction_time
 from  math import ceil, sqrt
 
+
 def helper_best(player_planet, target_planet, reaction_time):
     return
+
 
 def attack_weakest_enemy_planet(state):
     # (1) If we currently have a fleet in flight, abort plan.
