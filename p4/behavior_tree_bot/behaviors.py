@@ -1,12 +1,17 @@
+# Warner & Caetano behaviors.py
+# 3 February 2020
+
 import sys
 sys.path.insert(0, '../')
 from planet_wars import issue_order
+from  math import ceil, sqrt
 
 
 def attack_weakest_enemy_planet(state):
     # (1) If we currently have a fleet in flight, abort plan.
-    if len(state.my_fleets()) >= 1:
-        return False
+    #if len(state.my_fleets()) >= 1:
+        #return False                  # commented out because we want to be able to attack/defend regardless
+
 
     # (2) Find my strongest planet.
     strongest_planet = max(state.my_planets(), key=lambda t: t.num_ships, default=None)
@@ -39,3 +44,8 @@ def spread_to_weakest_neutral_planet(state):
     else:
         # (4) Send half the ships from my strongest planet to the weakest enemy planet.
         return issue_order(state, strongest_planet.ID, weakest_planet.ID, weakest_planet.num_ships + 1)
+
+def spread_nearest_neutral(state):
+    chosen_one = None
+    for chosen_one in state.neutral_planets():
+        if
