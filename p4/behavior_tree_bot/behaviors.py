@@ -46,3 +46,6 @@ def spread_to_weakest_neutral_planet(state):
         return issue_order(state, strongest_planet.ID, weakest_planet.ID, weakest_planet.num_ships + 1)
 
 def spread_nearest_neutral(state):
+    chosen_one = None
+    for chosen_one in state.neutral_planets():
+        if
