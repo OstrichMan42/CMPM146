@@ -73,7 +73,7 @@ def defend_boi(state): # warner
     average = 0
     diff = 0
 
-    average = my_planets.num_ships / my_planets
+    average = my_planets.num_ships / my_planets #planets:ship ratio
 
     for planet in my_planets():
         if planet.num_ships <= (average + 30): #weak threshold
