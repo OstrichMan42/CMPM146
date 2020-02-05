@@ -133,15 +133,13 @@ def snipe_boi(state): #caetano
             for boi in closest:
                 issue_order(state, boi.ID, snipe.ID, ceil(snipes[snipe][1] + 1 / div))
 
-
     return True
 
 
-# puts all friendly planets with a size over 25 in a list sorted by distance to target
+# puts all friendly planets in a list sorted by distance to target
 def closest_planets(state, target):
     closest = []
     for planet in state.my_planets:
-        if planet.num_ships > 25:
-            closest.insert(state.distance(planet, target), planet)
+        closest.insert(state.distance(planet, target), planet)
 
     return closest
