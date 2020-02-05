@@ -1,3 +1,6 @@
+# Warner & Caetano behaviors.py
+# 3 February 2020
+
 import sys
 sys.path.insert(0, '../')
 from planet_wars import issue_order
