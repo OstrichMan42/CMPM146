@@ -11,6 +11,7 @@ def have_largest_fleet(state):
              + sum(fleet.num_ships for fleet in state.enemy_fleets())
 
 
+#
 def making_more_ships(state):
     return sum(planet.growth_rate for planet in state.my_planets()) > sum(planet.growth_rate for planet in state.enemy_planets())
 
@@ -29,7 +30,7 @@ def planet_will_lose(state):
 
 # determines if we could send a fleet to arrive at a neutral planet to take it just after the enemy
 def snipe_available(state):
-    logging.debug('\n' + 'checking snipe available')
+    logging.debug('\nchecking snipe available')
     # make empty dict for storing, stores amount of enemy ships that will be in the planet once all fleets arrive
     snipes = {}
     for fleet in state.enemy_fleets:
@@ -78,3 +79,7 @@ def closest_enemy(state, target_planet):
             bestPlanet = enemyPlanet
             enemyReaction = state.distance(enemyPlanet.ID, target_planet.ID)
     return bestPlanet
+
+# return size of planet after all fleets arrive
+def effective_size()
+
