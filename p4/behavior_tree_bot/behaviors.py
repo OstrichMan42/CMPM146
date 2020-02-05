@@ -6,6 +6,8 @@ sys.path.insert(0, '../')
 from planet_wars import issue_order
 from  math import ceil, sqrt
 
+def helper_best(player_planet, target_planet, reaction_time)
+
 
 def attack_weakest_enemy_planet(state):
     # (1) If we currently have a fleet in flight, abort plan.
@@ -54,17 +56,18 @@ def spread_best_neutral(state):
 def attack_best_enemy(state):
     # closest & weakest enemy is the target
     return
-def balance_our_planets(state):
+def balance_our_planets(state): # warner
     # check if one planet has less than the average.
     # find the difference, average that dif value and average it by total num of our planets
     #       send that average ship number from every our_planet to the weak_planet while
     #       the planet_ship_count is < average for the weak_planet
     return
-def combined_attack(state):
+def combined_attack(state): # warner
+
     # find a best_enemy_planet, find out its ship value
     # target_planet will be attacked by (target_planet.shipcount + reacting_time(?) )
     return
-def defend_boi(state):s
+def defend_boi(state): # warner
     '''
     spread to an our_ship that is being attacked and is saveable
 
@@ -83,4 +86,6 @@ def defend_boi(state):s
     false)?
     '''
     return
-def
+
+def snipe_boi(state): #caetano
+    return
