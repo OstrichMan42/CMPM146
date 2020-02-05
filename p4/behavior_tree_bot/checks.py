@@ -11,9 +11,9 @@ def have_largest_fleet(state):
              + sum(fleet.num_ships for fleet in state.enemy_fleets())
 
 
-# def have_required_ships(state):
-#     if target_planet.owner == 0:
-#         required_ships = target_planet.num_ships + 1
-#     else:
-#         required_ships = target_planet.num_ships + \
-#                          state.distance(my_planet.ID, target_planet.ID) * target_planet.growth_rate + 1
+def making_more_ships(state):
+    return sum(planet.growth_rate for planet in state.my_planets()) > sum(planet.growth_rate for planet in state.enemy_planets())
+
+
+def have_advantage(state):
+    return making_more_ships(state) and have_largest_fleet(state)
