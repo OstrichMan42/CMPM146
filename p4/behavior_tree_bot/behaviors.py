@@ -6,7 +6,8 @@ sys.path.insert(0, '../')
 from planet_wars import issue_order
 from  math import ceil, sqrt
 
-def helper_best(player_planet, target_planet, reaction_time)
+def helper_best(target_planet, reaction_time):
+    return
 
 
 def attack_weakest_enemy_planet(state):
