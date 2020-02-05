@@ -17,3 +17,10 @@ def making_more_ships(state):
 
 def have_advantage(state):
     return making_more_ships(state) and have_largest_fleet(state)
+
+
+def planet_will_lose(state):
+    for fleet in state.enemy_fleets():
+        if fleet.turns_remaining * fleet.target_planet.growth_rate + fleet.target_planet.num_ships < fleet.num_ships:
+            return True
+    return False
