@@ -70,6 +70,27 @@ def combined_attack(state): # warner
     # target_planet will be attacked by (target_planet.shipcount + reacting_time(?) )
     return
 def defend_boi(state): # warner
+    ships_to_send = 0
+    counter = 0
+    average = 0
+    diff = 0
+
+    average = my_planets.num_ships / my_planets #planets:ship ratio
+
+    for planet in my_planets():
+        if planet.num_ships <= (average + 30): #weak threshold
+            target = planet
+            diff = average - target.num_ships
+            ships_to_send = diff + reaction_time
+            return
+        elif planet.num_ships > (average + 30): # strong threshold
+            target = None
+            return
+        #counter += 1
+
+
+
+
     '''
     spread to an our_ship that is being attacked and is saveable
 
