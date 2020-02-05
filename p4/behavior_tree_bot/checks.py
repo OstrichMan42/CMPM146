@@ -1,5 +1,3 @@
-
-
 def if_neutral_planet_available(state):
     return any(state.neutral_planets())
 
@@ -24,3 +22,16 @@ def planet_will_lose(state):
         if fleet.turns_remaining * fleet.target_planet.growth_rate + fleet.target_planet.num_ships < fleet.num_ships:
             return True
     return False
+
+
+def reaction_time(state, target_planet):
+    enemyReaction, myReaction = 1000
+
+    for ePlanet in state.enemy_planets:
+        if state.distance(ePlanet, target_planet) < enemyReaction:
+            enemyReaction = state.distance(ePlanet, target_planet)
+    for myPlanet in state.my_planets:
+        if state.distance(myPlanet, target_planet) < myReaction:
+            myReaction = state.distance(myPlanet, target_planet)
+
+    return enemyReaction - myReaction
