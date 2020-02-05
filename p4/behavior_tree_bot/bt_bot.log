@@ -1,0 +1,39 @@
+INFO:root:building tree
+INFO:root:
+Selector: High Level Ordering of Strategies
+| Sequence: Snipe Strategy
+| | Check: snipe_available
+| | Action: snipe_boi
+| Sequence: Offensive Strategy
+| | Check: have_largest_fleet
+| | Action: attack_weakest_enemy_planet
+| Sequence: Spread Strategy
+| | Check: if_neutral_planet_available
+| | Action: spread_to_weakest_neutral_planet
+| Action: attack_weakest_enemy_planet
+
+DEBUG:root:Executing:Selector: High Level Ordering of Strategies
+DEBUG:root:Executing:Sequence: Snipe Strategy
+DEBUG:root:Executing:Check: snipe_available
+INFO:root:checking snipe available
+ERROR:root:Error in bot.
+Traceback (most recent call last):
+  File "behavior_tree_bot/bt_bot.py", line 69, in <module>
+    do_turn(planet_wars)
+  File "behavior_tree_bot/bt_bot.py", line 56, in do_turn
+    behavior_tree.execute(planet_wars)
+  File "C:\Users\xenok\OneDrive\Desktop\School Work\Game AI\CMPM146\p4\behavior_tree_bot\bt_nodes.py", line 8, in logged_fn
+    result = fn(self, state)
+  File "C:\Users\xenok\OneDrive\Desktop\School Work\Game AI\CMPM146\p4\behavior_tree_bot\bt_nodes.py", line 52, in execute
+    success = child_node.execute(state)
+  File "C:\Users\xenok\OneDrive\Desktop\School Work\Game AI\CMPM146\p4\behavior_tree_bot\bt_nodes.py", line 8, in logged_fn
+    result = fn(self, state)
+  File "C:\Users\xenok\OneDrive\Desktop\School Work\Game AI\CMPM146\p4\behavior_tree_bot\bt_nodes.py", line 63, in execute
+    continue_execution = child_node.execute(state)
+  File "C:\Users\xenok\OneDrive\Desktop\School Work\Game AI\CMPM146\p4\behavior_tree_bot\bt_nodes.py", line 8, in logged_fn
+    result = fn(self, state)
+  File "C:\Users\xenok\OneDrive\Desktop\School Work\Game AI\CMPM146\p4\behavior_tree_bot\bt_nodes.py", line 77, in execute
+    return self.check_function(state)
+  File "C:\Users\xenok\OneDrive\Desktop\School Work\Game AI\CMPM146\p4\behavior_tree_bot\checks.py", line 37, in snipe_available
+    for fleet in state.enemy_fleets:
+TypeError: 'method' object is not iterable

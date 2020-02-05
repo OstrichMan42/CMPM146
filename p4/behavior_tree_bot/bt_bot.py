@@ -26,6 +26,7 @@ def setup_behavior_tree():
     # Top-down construction of behavior tree
     root = Selector(name='High Level Ordering of Strategies')
 
+    logging.info('building tree')
     snipe_plan = Sequence(name='Snipe Strategy')
     snipe_available_check = Check(snipe_available)
     snipe_attack = Action(snipe_boi)
@@ -44,7 +45,7 @@ def setup_behavior_tree():
     '''
     snipe_plan,
     '''
-    root.child_nodes = [offensive_plan, spread_sequence, attack.copy()]
+    root.child_nodes = [snipe_plan, offensive_plan, spread_sequence, attack.copy()]
 
     logging.info('\n' + root.tree_to_string())
     return root

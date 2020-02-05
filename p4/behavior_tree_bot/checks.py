@@ -28,12 +28,13 @@ def planet_will_lose(state):
     return False
 
 
+#questions for dan: vector?, debug?, neutral planet growth rate
 # determines if we could send a fleet to arrive at a neutral planet to take it just after the enemy
 def snipe_available(state):
-    logging.debug('\nchecking snipe available')
+    logging.info('checking snipe available')
     # make empty dict for storing, stores amount of enemy ships that will be in the planet once all fleets arrive
     snipes = {}
-    for fleet in state.enemy_fleets:
+    for fleet in state.enemy_fleets():
         target = fleet.target_planet
         if target.owner == 0 and -3 < reaction_time(state, target):
             if target not in snipes:
@@ -63,7 +64,9 @@ def reaction_time(state, target_planet):
 def closest_friendly(state, target_planet):
     bestPlanet = target_planet
     myReaction = 200
-    for myPlanet in state.my_planets:
+    for myPlanet in state.my_planets():
+        if myPlanet == target_planet:  # dont count itself
+            continue
         if state.distance(myPlanet.ID, target_planet.ID) < myReaction and myPlanet.num_ships > target_planet.num_ships * 0.1:
             bestPlanet = myPlanet
             myReaction = state.distance(myPlanet.ID, target_planet.ID)
@@ -74,12 +77,15 @@ def closest_friendly(state, target_planet):
 def closest_enemy(state, target_planet):
     bestPlanet = target_planet
     enemyReaction = 200
-    for enemyPlanet in state.enemy_planets:
-        if state.distance(enemyPlanet.ID, target_planet.ID) < enemyReaction and enemyPlanet.num_ships > target_planet.num_ships * 0.1:
+    for enemyPlanet in state.enemy_planets():
+        if enemyPlanet == target_planet:  # dont count itself
+            continue
+        if state.distance(enemyPlanet.ID, target_planet.ID) < enemyReaction and enemyPlanet.num_ships > target_planet.num_ships / 10:
             bestPlanet = enemyPlanet
             enemyReaction = state.distance(enemyPlanet.ID, target_planet.ID)
     return bestPlanet
 
-# return size of planet after all fleets arrive
-def effective_size()
 
+# return size of planet after all fleets arrive
+def effective_size():
+    return

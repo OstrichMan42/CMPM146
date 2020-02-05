@@ -5,7 +5,7 @@ import logging
 import sys
 sys.path.insert(0, '../')
 from planet_wars import issue_order
-from checks import closest_friendly, closest_enemy, reaction_time
+from checks import closest_friendly, closest_enemy, reaction_time, effective_size
 from  math import ceil, sqrt
 
 
@@ -16,8 +16,7 @@ def helper_best(player_planet, target_planet, reaction_time):
 def attack_weakest_enemy_planet(state):
     # (1) If we currently have a fleet in flight, abort plan.
     if len(state.my_fleets()) >= 5:
-        return False                  # commented out because we want to be able to attack/defend regardless
-
+        return False
 
     # (2) Find my strongest planet.
     strongest_planet = max(state.my_planets(), key=lambda t: t.num_ships, default=None)
@@ -66,11 +65,8 @@ def balance_our_planets(state): # warner
     #       send that average ship number from every our_planet to the weak_planet while
     #       the planet_ship_count is < average for the weak_planet
     return
-def combined_attack(state): # warner
 
-    # find a best_enemy_planet, find out its ship value
-    # target_planet will be attacked by (target_planet.shipcount + reacting_time(?) )
-    return
+
 def defend_boi(state): # warner
     ships_to_send = 0
     counter = 0
@@ -112,11 +108,12 @@ def defend_boi(state): # warner
     '''
     return
 
+
 def snipe_boi(state): #caetano
     # make empty dict for storing, index is a neutral planet targeted by an enemy fleet, stores tuples.
     # [0] is the number of enemy units that will be there when all enemy fleets arrive,
     # [1] is the number of turns until the first enemy fleet arrives
-    logging.info('\nsniping')
+    logging.info('sniping')
     snipes = {}
     for fleet in state.enemy_fleets:
         target = fleet.target_planet
@@ -138,6 +135,30 @@ def snipe_boi(state): #caetano
     return True
 
 
+def spread_to_best_neutral(state):
+    if not state.neutral_planets:
+        return False
+
+    bestTarget = state.neutral_planets[0]
+    bestTime = reaction_time(state, bestTarget)
+    for nPlanet in state.neutral_planets:
+        nReaction = reaction_time(state, nPlanet)
+        if nReaction > bestTime:
+            bestTarget = nPlanet
+            bestTime = nReaction
+
+    closest = closest_planets(state, bestTarget)
+
+    lastFleetTime = 0
+    armada = []
+    for myPlanet in closest:
+        #if threshold(myPlanet, bestTarget): #implement threshold
+            armada.append(myPlanet)
+    combined_move(state, bestTarget, armada)
+
+
+### Helper Functions ###
+
 # puts all friendly planets in a list sorted by distance to target
 def closest_planets(state, target):
     closest = []
@@ -145,3 +166,19 @@ def closest_planets(state, target):
         closest.insert(state.distance(planet, target), planet)
 
     return closest
+
+
+# Issues orders to put target's effective size over 1
+def combined_move(state, target, armada): # warner
+    friendly = False
+    if target.owner == 1:
+        friendly = True
+
+    lastFleetTime = state.distance(armada[len(armada)-1], target)
+    targetSize = target.num_ships
+    # send ships from each planet in armada
+    #for planet in armada:
+
+    return
+
+
