@@ -1,3 +1,5 @@
+import logging
+
 def if_neutral_planet_available(state):
     return any(state.neutral_planets())
 
@@ -27,6 +29,7 @@ def planet_will_lose(state):
 
 # determines if we could send a fleet to arrive at a neutral planet to take it just after the enemy
 def snipe_available(state):
+    logging.debug('\n' + 'checking snipe available')
     # make empty dict for storing, stores amount of enemy ships that will be in the planet once all fleets arrive
     snipes = {}
     for fleet in state.enemy_fleets:

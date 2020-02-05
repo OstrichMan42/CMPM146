@@ -1,6 +1,7 @@
 # Warner & Caetano behaviors.py
 # 3 February 2020
 
+import logging
 import sys
 sys.path.insert(0, '../')
 from planet_wars import issue_order
@@ -12,8 +13,8 @@ def helper_best(player_planet, target_planet, reaction_time):
 
 def attack_weakest_enemy_planet(state):
     # (1) If we currently have a fleet in flight, abort plan.
-    #if len(state.my_fleets()) >= 1:
-        #return False                  # commented out because we want to be able to attack/defend regardless
+    if len(state.my_fleets()) >= 5:
+        return False                  # commented out because we want to be able to attack/defend regardless
 
 
     # (2) Find my strongest planet.
@@ -31,9 +32,9 @@ def attack_weakest_enemy_planet(state):
 
 
 def spread_to_weakest_neutral_planet(state):
-    # (1) If we currently have a fleet in flight, just do nothing.
-    #if len(state.my_fleets()) >= 1:
-    #    return False
+    # (1) If we currently have 5 fleets in flight, just do nothing.
+    if len(state.my_fleets()) >= 5:
+        return False
 
     # (2) Find my strongest planet.
     strongest_planet = max(state.my_planets(), key=lambda p: p.num_ships, default=None)
@@ -92,20 +93,20 @@ def snipe_boi(state): #caetano
     # make empty dict for storing, index is a neutral planet targeted by an enemy fleet, stores tuples.
     # [0] is the number of enemy units that will be there when all enemy fleets arrive,
     # [1] is the number of turns until the first enemy fleet arrives
-    print("sniping")
+    logging.info('\nsniping')
     snipes = {}
     for fleet in state.enemy_fleets:
         target = fleet.target_planet
         if target.owner == 0 and -3 < reaction_time(state, target):
             if target not in snipes:
-                snipes[target] = (fleet.num_ships - target.num_ships, fleet.turns_remaining)
+                snipes[target] = (fleet.num_ships - target.num_ships, fleet.turns_remaining - fleet.turns_remaining * target.growth_rate)
             else:
-                snipes[target][0] += fleet.num_ships
+                snipes[target][0] += fleet.num_ships - fleet.turns_remaining * target.growth_rate
                 if snipes[target][1] > fleet.turns_remaining:
                     snipes[target][1] = fleet.turns_remaining
 
     for snipe in snipes:
-        if reaction_time(state, snipe) > 0 and snipes[snipe][0] < 21:
+        if reaction_time(state, snipe) > 0 and 0 < snipes[snipe][0] < 21:
             closest = closest_planets(state, snipe)
             div = len(closest)
             for boi in closest:

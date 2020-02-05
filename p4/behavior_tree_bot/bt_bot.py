@@ -27,9 +27,9 @@ def setup_behavior_tree():
     root = Selector(name='High Level Ordering of Strategies')
 
     snipe_plan = Sequence(name='Snipe Strategy')
-    snipe_available_check = Check(snipe_available)
-    snipe_attack = Action(snipe_boi)
-    snipe_plan.child_nodes = [snipe_available_check, snipe_attack]
+    #snipe_available_check = Check(snipe_available)
+    #snipe_attack = Action(snipe_boi)
+    #snipe_plan.child_nodes = [snipe_available_check, snipe_attack]
 
     offensive_plan = Sequence(name='Offensive Strategy')
     largest_fleet_check = Check(have_largest_fleet)
