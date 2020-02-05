@@ -4,6 +4,7 @@
 import sys
 sys.path.insert(0, '../')
 from planet_wars import issue_order
+from checks import closest_friendly, closest_enemy
 from  math import ceil, sqrt
 
 

@@ -25,13 +25,32 @@ def planet_will_lose(state):
 
 
 def reaction_time(state, target_planet):
-    enemyReaction, myReaction = 1000
+    enemyPlanet = closest_enemy(state, target_planet)
+    myPlanet = closest_friendly(state, target_planet)
 
-    for ePlanet in state.enemy_planets:
-        if state.distance(ePlanet, target_planet) < enemyReaction:
-            enemyReaction = state.distance(ePlanet, target_planet)
-    for myPlanet in state.my_planets:
-        if state.distance(myPlanet, target_planet) < myReaction:
-            myReaction = state.distance(myPlanet, target_planet)
+    enemyReaction = state.distance(enemyPlanet.ID, target_planet.ID)
+    myReaction = state.distance(myPlanet.ID, target_planet.ID)
 
     return enemyReaction - myReaction
+
+
+# returns target_planet's closest relevant friendly neighbor
+def closest_friendly(state, target_planet):
+    bestPlanet = target_planet
+    myReaction = 200
+    for myPlanet in state.my_planets:
+        if state.distance(myPlanet.ID, target_planet.ID) < myReaction and myPlanet.num_ships > target_planet.num_ships * 0.1:
+            bestPlanet = myPlanet
+            myReaction = state.distance(myPlanet.ID, target_planet.ID)
+    return bestPlanet
+
+
+# returns target_planet's closest relevant hostile neighbor
+def closest_enemy(state, target_planet):
+    bestPlanet = target_planet
+    enemyReaction = 200
+    for enemyPlanet in state.enemy_planets:
+        if state.distance(enemyPlanet.ID, target_planet.ID) < enemyReaction and enemyPlanet.num_ships > target_planet.num_ships * 0.1:
+            bestPlanet = enemyPlanet
+            enemyReaction = state.distance(enemyPlanet.ID, target_planet.ID)
+    return bestPlanet
