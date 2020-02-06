@@ -43,7 +43,7 @@ def setup_behavior_tree():
     spread_sequence.child_nodes = [neutral_planet_check, spread_action]
 
     defense_plan = Sequence(name= 'Defensive Strategy')
-    defend_boi_check = Check(defend_boi_availble)
+    defend_boi_check = Check(defend_boi_available)
     defend_action = Action(defend_boi)
     defense_plan.child_nodes = [defend_boi_check, defend_action]
 

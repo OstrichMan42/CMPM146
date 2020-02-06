@@ -27,16 +27,14 @@ def planet_will_lose(state):
             return True
     return False
 
-def defend_boi_availble(state):
-    wouldDie = []
+
+def defend_boi_available(state):
     for planet in state.my_planets():
         turn = 0
         for size in effective_size(state, planet):
             if size < 1 and reaction_time(state, planet) > -1:
-                return True  # wouldDie.append((planet, turn))
-            else:
-                return False
-            turn += 1
+                return True
+    return False
 
 
 
