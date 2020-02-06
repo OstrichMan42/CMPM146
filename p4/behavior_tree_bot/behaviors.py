@@ -107,7 +107,7 @@ def spread_to_best_neutral(state):
         while True:
             required_ships = target_planet.num_ships + 1
 
-            if my_planet.num_ships > required_ships:
+            if my_planet.num_ships > required_ships and my_planet.num_ships > 40:
                 issue_order(state, my_planet.ID, target_planet.ID, required_ships)
                 my_planet = next(my_planets)
                 target_planet = next(target_planets)
