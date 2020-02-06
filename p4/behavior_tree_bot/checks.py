@@ -81,5 +81,6 @@ def closest_enemy(state, target_planet):
     return bestPlanet
 
 # return size of planet after all fleets arrive
-def effective_size()
+def effective_size():
+    return False
 
