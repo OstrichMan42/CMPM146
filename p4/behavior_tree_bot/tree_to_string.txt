@@ -1,0 +1,15 @@
+INFO:root:
+Selector: High Level Ordering of Strategies
+| Sequence: Defensive Strategy
+| | Check: defend_boi_available
+| | Action: defend_boi
+| Sequence: Snipe Strategy
+| | Check: snipe_available
+| | Action: snipe_boi
+| Sequence: Offensive Strategy
+| | Check: have_largest_fleet
+| | Action: attack_weakest_enemy_planet
+| Sequence: Spread Strategy
+| | Check: if_neutral_planet_available
+| | Action: spread_to_best_neutral
+| Action: attack_weakest_enemy_planet
