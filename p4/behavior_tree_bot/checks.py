@@ -1,10 +1,12 @@
 import logging
 
 def if_neutral_planet_available(state):
+    logging.info('neutral available ')
     return any(state.neutral_planets())
 
 
 def have_largest_fleet(state):
+    logging.info('have largest ')
     return sum(planet.num_ships for planet in state.my_planets()) \
              + sum(fleet.num_ships for fleet in state.my_fleets()) \
            > sum(planet.num_ships for planet in state.enemy_planets()) \
@@ -13,21 +15,25 @@ def have_largest_fleet(state):
 
 #
 def making_more_ships(state):
+    logging.info('makin more')
     return sum(planet.growth_rate for planet in state.my_planets()) > sum(planet.growth_rate for planet in state.enemy_planets())
 
 
 def have_advantage(state):
+    logging.info('have advantage')
     return making_more_ships(state) and have_largest_fleet(state)
 
 
 # returns whether or not any of our planets would be taken
 def planet_will_lose(state):
+    logging.info('will lose ')
     for fleet in state.enemy_fleets():
         if fleet.turns_remaining * fleet.target_planet.growth_rate + fleet.target_planet.num_ships < fleet.num_ships:
             return True
     return False
 
 def defend_boi_availble(state):
+    logging.info('defend available ')
     wouldDie = []
     for planet in state.my_planets():
         turn = 0
@@ -63,6 +69,7 @@ def snipe_available(state):
 
 # returns enemy_reaction_time - our_reaction_time
 def reaction_time(state, target_planet):
+    logging.info('reaction time ')
     enemyPlanet = closest_enemy(state, target_planet)
     myPlanet = closest_friendly(state, target_planet)
 
@@ -74,6 +81,7 @@ def reaction_time(state, target_planet):
 
 # returns target_planet's closest relevant friendly neighbor
 def closest_friendly(state, target_planet):
+    logging.info('closest friendly ')
     bestPlanet = target_planet
     myReaction = 200
     for myPlanet in state.my_planets():
@@ -87,6 +95,7 @@ def closest_friendly(state, target_planet):
 
 # returns target_planet's closest relevant hostile neighbor
 def closest_enemy(state, target_planet):
+    logging.info('closest_enemy ')
     bestPlanet = target_planet
     enemyReaction = 200
     for enemyPlanet in state.enemy_planets():
@@ -100,6 +109,7 @@ def closest_enemy(state, target_planet):
 
 # return size of planet after all fleets arrive
 def effective_size(state, planet):
+    logging.info('effective size ')
     sizeAtTurn = []
     if planet.owner == 1: #friendly planet
         sizeAtTurn = [planet.num_ships, planet.num_ships + planet.growth_rate, planet.num_ships + planet.growth_rate * 2,
