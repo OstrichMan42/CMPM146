@@ -87,5 +87,30 @@ def closest_enemy(state, target_planet):
 
 
 # return size of planet after all fleets arrive
-def effective_size():
-    return
+def effective_size(state, planet):
+    sizeAtTurn = []
+    if planet.owner == 1: #friendly planet
+        sizeAtTurn = [planet.num_ships, planet.num_ships + planet.growth_rate, planet.num_ships + planet.growth_rate * 2,
+                      planet.num_ships + planet.growth_rate * 3, planet.num_ships + planet.growth_rate * 4,
+                      planet.num_ships + planet.growth_rate * 5, planet.num_ships + planet.growth_rate * 6,
+                      planet.num_ships + planet.growth_rate * 7, planet.num_ships + planet.growth_rate * 8,
+                      planet.num_ships + planet.growth_rate * 9]
+    elif planet.owner == 2: #enemy planet
+        sizeAtTurn = [-planet.num_ships, -(planet.num_ships + planet.growth_rate),
+                      -(planet.num_ships + planet.growth_rate * 2), -(planet.num_ships + planet.growth_rate * 3),
+                      -(planet.num_ships + planet.growth_rate * 4), -(planet.num_ships + planet.growth_rate * 5),
+                      -(planet.num_ships + planet.growth_rate * 6), -(planet.num_ships + planet.growth_rate * 7),
+                      -(planet.num_ships + planet.growth_rate * 8), -(planet.num_ships + planet.growth_rate * 9)]
+    else: #neutral planet
+        sizeAtTurn[0:9] = planet.num_ships
+
+    for fleet in state.fleets:
+        if fleet.destination_planet == planet and fleet.turns_remaining < 10:
+            if planet.owner == 0:
+                sizeAtTurn[fleet.turns_remaining] -= fleet.num_ships
+            elif fleet.owner == 1:
+                sizeAtTurn[fleet.turns_remaining] += fleet.num_ships
+            else:
+                sizeAtTurn[fleet.turns_remaining] -= fleet.num_ships
+
+    return sizeAtTurn

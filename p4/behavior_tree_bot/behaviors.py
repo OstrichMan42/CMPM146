@@ -197,7 +197,7 @@ def snipe_boi(state): #caetano
             closest = closest_planets(state, snipe)
             div = len(closest)
             for boi in closest:
-                issue_order(state, boi.ID, snipe.ID, ceil(snipes[snipe][1] + 1 / div))
+                issue_order(state, boi.ID, snipe.ID, ceil(snipes[snipe][0] + 1 / div))
 
     return True
 
