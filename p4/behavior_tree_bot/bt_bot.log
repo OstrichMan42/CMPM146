@@ -26,7 +26,7 @@ DEBUG:root:Executing:Sequence: Spread Strategy
 DEBUG:root:Executing:Check: if_neutral_planet_available
 DEBUG:root:Result: Check: if_neutral_planet_available -> Success
 DEBUG:root:Executing:Action: spread_to_weakest_neutral_planet
-DEBUG:root:Order:1 11 2.0
+DEBUG:root:Order:1 3 10.0
 DEBUG:root:Result: Action: spread_to_weakest_neutral_planet -> Success
 DEBUG:root:Result: Sequence: Spread Strategy -> Success
 DEBUG:root:Result: Selector: High Level Ordering of Strategies -> Success
@@ -36,24 +36,12 @@ DEBUG:root:Executing:Selector: High Level Ordering of Strategies
 DEBUG:root:Executing:Sequence: Snipe Strategy
 DEBUG:root:Executing:Check: snipe_available
 INFO:root:checking snipe available
-ERROR:root:Error in bot.
-Traceback (most recent call last):
-  File "behavior_tree_bot/bt_bot.py", line 69, in <module>
-    do_turn(planet_wars)
-  File "behavior_tree_bot/bt_bot.py", line 56, in do_turn
-    behavior_tree.execute(planet_wars)
-  File "C:\Users\xenok\OneDrive\Desktop\School Work\Game AI\CMPM146\p4\behavior_tree_bot\bt_nodes.py", line 8, in logged_fn
-    result = fn(self, state)
-  File "C:\Users\xenok\OneDrive\Desktop\School Work\Game AI\CMPM146\p4\behavior_tree_bot\bt_nodes.py", line 52, in execute
-    success = child_node.execute(state)
-  File "C:\Users\xenok\OneDrive\Desktop\School Work\Game AI\CMPM146\p4\behavior_tree_bot\bt_nodes.py", line 8, in logged_fn
-    result = fn(self, state)
-  File "C:\Users\xenok\OneDrive\Desktop\School Work\Game AI\CMPM146\p4\behavior_tree_bot\bt_nodes.py", line 63, in execute
-    continue_execution = child_node.execute(state)
-  File "C:\Users\xenok\OneDrive\Desktop\School Work\Game AI\CMPM146\p4\behavior_tree_bot\bt_nodes.py", line 8, in logged_fn
-    result = fn(self, state)
-  File "C:\Users\xenok\OneDrive\Desktop\School Work\Game AI\CMPM146\p4\behavior_tree_bot\bt_nodes.py", line 77, in execute
-    return self.check_function(state)
-  File "C:\Users\xenok\OneDrive\Desktop\School Work\Game AI\CMPM146\p4\behavior_tree_bot\checks.py", line 39, in snipe_available
-    if target.owner == 0 and -3 < reaction_time(state, target):
-AttributeError: 'int' object has no attribute 'owner'
+DEBUG:root:Result: Check: snipe_available -> Success
+DEBUG:root:Executing:Action: snipe_boi
+INFO:root:sniping
+DEBUG:root:Order:1 3 -24
+DEBUG:root:Result: Action: snipe_boi -> Success
+DEBUG:root:Result: Sequence: Snipe Strategy -> Success
+DEBUG:root:Result: Selector: High Level Ordering of Strategies -> Success
+DEBUG:root:Finish turn
+
