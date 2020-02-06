@@ -88,7 +88,7 @@ def snipe_boi(state): #caetano
             closest = closest_planets(state, snipe)
             for boi in closest:
                 if state.distance(boi.ID, snipe.ID) == snipes[snipe][1]+1 and threshold(state, boi) > 0:
-                    issue_order(state, boi.ID, snipe.ID, ceil(snipes[snipe][0] + 1))
+                    issue_order(state, boi.ID, snipe.ID, 20)
                     return True
     return False
 

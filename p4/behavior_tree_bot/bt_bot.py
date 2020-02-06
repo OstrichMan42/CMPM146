@@ -50,7 +50,7 @@ def setup_behavior_tree():
     '''
     snipe_plan,
     '''
-    root.child_nodes = [snipe_plan, offensive_plan, spread_sequence, defend_boi, attack.copy()]
+    root.child_nodes = [defense_plan, snipe_plan, offensive_plan, spread_sequence, attack.copy()]
 
     logging.info('\n' + root.tree_to_string())
     return root
