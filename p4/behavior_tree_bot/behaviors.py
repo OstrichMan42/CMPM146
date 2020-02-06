@@ -129,51 +129,11 @@ def defend_boi(state): # warner
                 if threshold(state, supporter) <= 0: # less than sufficiently large
                     continue
 
-''' # commented out for testing other parts
-                elif threshold(state, supporter) > 0: # sufficiently large
-                    # need a needed ship_num value
-                    needed = 
-                    issue_order(state, supporter, find_support, needed)
-                else:
-                    return
-                '''
-
-
-
-
-''' average = sum(planet.num_ships for planet in state.my_planets()) / len(state.my_planets) #planets:ship ratio
-
-    for planet in my_planets():
-        if planet.num_ships <= (average - 30):  #weak threshold
-            target = planet
-            diff = average - target.num_ships
-            ships_to_send = diff + reaction_time
-            return                              #
-
-        elif planet.num_ships > (average + 30): # strong threshold
-            target = None
-            return
-        counter += 1 
-    '''
-
-'''
-    spread to an our_planet that is being attacked and is saveable
-
-
-
-    if our_target.reaction_time <= 0:          #(<=)? idk the affect of reactiontime == 0
-        not saveable, ignore the boi (sadface)
-    else if reaction_time > 0:
-        #SAVE THE BOI!
-
-
-    ?(saveable():
-    if our_ship is within saveable distance
-        return true
-    else:
-    false)?
-'''
-    #return
+canBeSaved = []
+for planet in state.my_planets():
+    for size in effective_size(state, planet):
+        if size < 1 and reaction_time(state, planet) > -1:
+            canBeSaved.append(planet)
 
 
 def snipe_boi(state): #caetano
