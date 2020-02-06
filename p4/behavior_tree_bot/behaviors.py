@@ -52,8 +52,8 @@ def defend_boi(state): # warner
     for planet in state.my_planets():
         turn = 0
         for size in effective_size(state, planet):
-            if size < 1 and reaction_time(state, planet) > -1:
-                return True
+            if size < 1: #  and reaction_time(state, planet) > -1
+                wouldDie.append((planet, turn))
             turn += 1
 
     for planet, turn in wouldDie:
@@ -65,6 +65,7 @@ def defend_boi(state): # warner
             elif threshold(state, support) != -1:
                 armada.append(support)
         combined_move(state, planet, armada)
+        return True
 
 
 def snipe_boi(state): #caetano
@@ -132,6 +133,7 @@ def closest_planets(state, target):
 
 # Issues orders to put target's effective size over 1
 def combined_move(state, target, armada): # warner
+    logging.info("sending an armada")
     friendly = False
     if target.owner == 1:
         friendly = True

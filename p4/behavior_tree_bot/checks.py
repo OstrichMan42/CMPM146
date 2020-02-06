@@ -34,10 +34,11 @@ def planet_will_lose(state):
 
 
 def defend_boi_available(state):
-    logging.info('defend available ')
+    logging.info('defend check ')
     for planet in state.my_planets():
         for size in effective_size(state, planet):
-            if size < 1 and reaction_time(state, planet) > -5:
+            if size < 1: #  and reaction_time(state, planet) > -5
+                logging.info('defend available ')
                 return True
     return False
 
