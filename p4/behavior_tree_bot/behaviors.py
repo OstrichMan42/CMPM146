@@ -104,6 +104,7 @@ def defend_boi(state): # warner
     strong_list = []
     weakest     = 10000
     strongest   = 0 #(?)
+    weakestID = 0
 
 
     for planet in state.my_planets(): # stores small ship count in small, big ship count in big
@@ -113,6 +114,7 @@ def defend_boi(state): # warner
 
             if weak_list[planet] < weakest: # finds weakest planet
                 weakest = planet.num_ships
+                weakestID = planet.ID
 
         elif threshold(state, planet) > 0:
 
@@ -120,14 +122,15 @@ def defend_boi(state): # warner
 
 
     # find closest big planet to weakest
-    for find_support in state.my_planets(): # find weakest to support
-        if find_support.num_ships == weakest:
-            for supporter in closest_planets(state, find_support): # from perspective of weakest, find the closest planet that meets threshold
+    #for find_support in state.my_planets(): # find weakest to support
+        #if find_support.num_ships == weakest:
+    for supporter in closest_planets(state, find_support): # from perspective of weakest, find the closest planet that meets threshold
 
-                if supporter in strong_list: # this is one of the strong planets
-                    do_thing=1
-                if threshold(state, supporter) <= 0: # less than sufficiently large
-                    continue
+        if supporter in strong_list: # this is one of the strong planets
+              #do_thing=1
+                issue_order(state, supporter.ID, weakestID,  )
+        if threshold(state, supporter) <= 0: # less than sufficiently large
+                  continue
 
 ''' # commented out for testing other parts
                 elif threshold(state, supporter) > 0: # sufficiently large
