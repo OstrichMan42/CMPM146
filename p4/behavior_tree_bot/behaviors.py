@@ -94,25 +94,29 @@ def snipe_boi(state): #caetano
 
 
 def spread_to_best_neutral(state):
-    if not state.neutral_planets():
-        return False
+    my_planets = iter(sorted(state.my_planets(), key=lambda p: p.num_ships))
 
-    bestTarget = state.neutral_planets()[0]
-    bestTime = reaction_time(state, bestTarget)
-    for nPlanet in state.neutral_planets():
-        nReaction = reaction_time(state, nPlanet)
-        if nReaction > bestTime:
-            bestTarget = nPlanet
-            bestTime = nReaction
+    neutral_planets = [planet for planet in state.neutral_planets()
+                       if not any(fleet.destination_planet == planet.ID for fleet in state.my_fleets())]
+    neutral_planets.sort(key=lambda p: p.num_ships)
 
-    closest = closest_planets(state, bestTarget)
+    target_planets = iter(neutral_planets)
 
-    lastFleetTime = 0
-    armada = []
-    for myPlanet in closest:
-        #if threshold(myPlanet, bestTarget): #implement threshold
-            armada.append(myPlanet)
-    combined_move(state, bestTarget, armada)
+    try:
+        my_planet = next(my_planets)
+        target_planet = next(target_planets)
+        while True:
+            required_ships = target_planet.num_ships + 1
+
+            if my_planet.num_ships > required_ships:
+                issue_order(state, my_planet.ID, target_planet.ID, required_ships)
+                my_planet = next(my_planets)
+                target_planet = next(target_planets)
+            else:
+                my_planet = next(my_planets)
+
+    except StopIteration:
+        return
 
 
 ### Helper Functions ###
