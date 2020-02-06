@@ -9,11 +9,11 @@ from checks import closest_friendly, closest_enemy, reaction_time
 from  math import ceil, sqrt
 
 
-def threshold(reaction_time, target, my_planet):
+#def threshold(reaction_time, target, my_planet):
 
-    return
+    #return
 
-def best_target(state):
+#def best_target(state):
 
 
 
@@ -105,7 +105,7 @@ def defend_boi(state): # warner
     strongest   = 0 #(?)
 
 
-    for planet in my_planets: # stores small ship count in small, big ship count  in big
+    for planet in my_planets(): # stores small ship count in small, big ship count  in big
 
         if threshold(state, planet) < 0:
             weak_list.append(planet)
@@ -117,8 +117,18 @@ def defend_boi(state): # warner
 
             strong_list.append(planet)
 
-    # find closest big planet to smallest
+    # find closest big planet to weakest
 
+    for find_support in my_planets(): # find weakest to support
+        if find_support.num_ships == weakest:
+            for supporter in my_planets: # from perspective of weakest, find the closest planet that meets threshold
+                supporter = closest_friendly(state, supporter)
+                if threshold(state, supporter) <= 0: # less than sufficiently large
+                    continue
+                elif threshold(state, supporter) > 0: # sufficiently large
+                    # need a needed ship_num value
+                    issue_order(state, supporter, find_support, needed )
+                else: return
 
 
 
