@@ -65,7 +65,7 @@ def closest_friendly(state, target_planet):
     bestPlanet = target_planet
     myReaction = 200
     for myPlanet in state.my_planets():
-        if myPlanet == target_planet:  # dont count itself
+        if myPlanet == target_planet:  # don't count itself
             continue
         if state.distance(myPlanet.ID, target_planet.ID) < myReaction and myPlanet.num_ships > target_planet.num_ships * 0.1:
             bestPlanet = myPlanet
@@ -78,7 +78,7 @@ def closest_enemy(state, target_planet):
     bestPlanet = target_planet
     enemyReaction = 200
     for enemyPlanet in state.enemy_planets():
-        if enemyPlanet == target_planet:  # dont count itself
+        if enemyPlanet == target_planet:  # don't count itself
             continue
         if state.distance(enemyPlanet.ID, target_planet.ID) < enemyReaction and enemyPlanet.num_ships > target_planet.num_ships / 10:
             bestPlanet = enemyPlanet

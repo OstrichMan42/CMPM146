@@ -9,10 +9,6 @@ from checks import closest_friendly, closest_enemy, reaction_time, effective_siz
 from  math import ceil, sqrt
 
 
-def helper_best(player_planet, target_planet, reaction_time):
-    return
-
-
 def attack_weakest_enemy_planet(state):
     # (1) If we currently have a fleet in flight, abort plan.
     if len(state.my_fleets()) >= 5:
@@ -50,47 +46,118 @@ def spread_to_weakest_neutral_planet(state):
         # (4) Send half the ships from my strongest planet to the weakest enemy planet.
         return issue_order(state, strongest_planet.ID, weakest_planet.ID, weakest_planet.num_ships + 1)
 
+
 def spread_best_neutral(state):
     # closest & weakest neutral is target
     chosen_one = None
     #for chosen_one in state.neutral_planets():
 
     return
+
+
 def attack_best_enemy(state):
     # closest & weakest enemy is the target
     return
-def balance_our_planets(state): # warner
+
+
+#def balance_our_planets(state): # warner
     # check if one planet has less than the average.
     # find the difference, average that dif value and average it by total num of our planets
     #       send that average ship number from every our_planet to the weak_planet while
     #       the planet_ship_count is < average for the weak_planet
+    #return
+
+
+def combined_attack(state): # warner
+
+    # find a best_enemy_planet, find out its ship value
+    # target_planet will be attacked by (target_planet.shipcount + reacting_time(?) )
     return
+
+
+#thresh
+def threshold(state, target):
+    average = sum(planet.num_ships for planet in state.my_planets()) / len(state.my_planets) # how to write?
+    upper = average + (average * 0.2) # upper bound of threshold
+    lower = average - (average * 0.2) # lower ^^^^^^^^^^^^^^^^^^
+    ret_val = 0 # return value
+
+    if target > upper: # if target is greater than upper threshold --> means it is sufficiently large
+        ret_val = 1
+    elif target < lower: # if target is fewer than lower threshold --> means too weak
+        ret_val = -1
+    elif target <= upper and target >= lower: # sweet spot, planets in this range are average size
+        ret_val = 0
+    else:
+        return ret_val
+    return ret_val
 
 
 def defend_boi(state): # warner
     ships_to_send = 0
+
     counter = 0
     average = 0
-    diff = 0
+    diff    = 0
 
-    average = my_planets.num_ships / my_planets #planets:ship ratio
+    weak_list   = []
+    strong_list = []
+    weakest     = 10000
+    strongest   = 0 #(?)
+
+
+    for planet in state.my_planets(): # stores small ship count in small, big ship count in big
+
+        if threshold(state, planet) < 0:
+            weak_list.append(planet)
+
+            if weak_list[planet] < weakest: # finds weakest planet
+                weakest = planet.num_ships
+
+        elif threshold(state, planet) > 0:
+
+            strong_list.append(planet)
+
+
+    # find closest big planet to weakest
+    for find_support in state.my_planets(): # find weakest to support
+        if find_support.num_ships == weakest:
+            for supporter in closest_planets(state, find_support): # from perspective of weakest, find the closest planet that meets threshold
+
+                if supporter in strong_list: # this is one of the strong planets
+                    do_thing=1
+                if threshold(state, supporter) <= 0: # less than sufficiently large
+                    continue
+
+''' # commented out for testing other parts
+                elif threshold(state, supporter) > 0: # sufficiently large
+                    # need a needed ship_num value
+                    needed = 
+                    issue_order(state, supporter, find_support, needed)
+                else:
+                    return
+                '''
+
+
+
+
+''' average = sum(planet.num_ships for planet in state.my_planets()) / len(state.my_planets) #planets:ship ratio
 
     for planet in my_planets():
-        if planet.num_ships <= (average + 30): #weak threshold
+        if planet.num_ships <= (average - 30):  #weak threshold
             target = planet
             diff = average - target.num_ships
             ships_to_send = diff + reaction_time
-            return
+            return                              #
+
         elif planet.num_ships > (average + 30): # strong threshold
             target = None
             return
-        #counter += 1
-
-
-
-
+        counter += 1 
     '''
-    spread to an our_ship that is being attacked and is saveable
+
+'''
+    spread to an our_planet that is being attacked and is saveable
 
 
 
@@ -105,8 +172,8 @@ def defend_boi(state): # warner
         return true
     else:
     false)?
-    '''
-    return
+'''
+    #return
 
 
 def snipe_boi(state): #caetano
@@ -115,7 +182,7 @@ def snipe_boi(state): #caetano
     # [1] is the number of turns until the first enemy fleet arrives
     logging.info('sniping')
     snipes = {}
-    for fleet in state.enemy_fleets:
+    for fleet in state.enemy_fleets():
         target = state.planets[fleet.destination_planet]
         if target.owner == 0 and -3 < reaction_time(state, target):
             if target not in snipes:
@@ -141,7 +208,7 @@ def spread_to_best_neutral(state):
 
     bestTarget = state.neutral_planets[0]
     bestTime = reaction_time(state, bestTarget)
-    for nPlanet in state.neutral_planets:
+    for nPlanet in state.neutral_planets():
         nReaction = reaction_time(state, nPlanet)
         if nReaction > bestTime:
             bestTarget = nPlanet
@@ -162,8 +229,8 @@ def spread_to_best_neutral(state):
 # puts all friendly planets in a list sorted by distance to target
 def closest_planets(state, target):
     closest = []
-    for planet in state.my_planets:
-        closest.insert(state.distance(planet, target), planet)
+    for planet in state.my_planets():
+        closest.insert(state.distance(planet.ID, target.ID), planet)
 
     return closest
 
