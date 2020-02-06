@@ -53,7 +53,7 @@ def defend_boi(state): # warner
         turn = 0
         for size in effective_size(state, planet):
             if size < 1 and reaction_time(state, planet) > -1:
-                return True#wouldDie.append((planet, turn))
+                return True
             turn += 1
 
     for planet, turn in wouldDie:
