@@ -60,12 +60,10 @@ def defend_boi(state): # warner
         armada = []
         closest = closest_planets(state, planet)
         for support in closest:
-            if state.distance(support.ID, planet.ID) > turn:
-                break
-            elif threshold(state, support) != -1:
+            if threshold(state, support) != -1:
                 armada.append(support)
         combined_move(state, planet, armada)
-        return True
+    return True
 
 
 def snipe_boi(state): #caetano
@@ -78,14 +76,14 @@ def snipe_boi(state): #caetano
         target = state.planets[fleet.destination_planet]
         if target.owner == 0 and -3 < reaction_time(state, target):
             if target not in snipes:
-                snipes[target] = (fleet.num_ships - target.num_ships, fleet.turns_remaining - fleet.turns_remaining * target.growth_rate)
+                snipes[target] = (fleet.num_ships - target.num_ships, fleet.turns_remaining)
             else:
-                snipes[target][0] += fleet.num_ships - fleet.turns_remaining * target.growth_rate
+                snipes[target][0] += fleet.num_ships
                 if snipes[target][1] > fleet.turns_remaining:
                     snipes[target][1] = fleet.turns_remaining
 
     for snipe in snipes:
-        if reaction_time(state, snipe) > 0 and 0 < snipes[snipe][0] < 21:
+        if 0 < snipes[snipe][0] < 21:
             closest = closest_planets(state, snipe)
             for boi in closest:
                 if state.distance(boi.ID, snipe.ID) == snipes[snipe][1]+1 and threshold(state, boi) > 0:
@@ -146,9 +144,11 @@ def combined_move(state, target, armada): # warner
         turn += 1
         targetSize = size
 
+    if target.num_ships > len(armada) * 20:
+        return False
     # send ships from each planet in armada
     for planet in armada:
-        issue_order(state, planet.ID, target.ID, targetSize / len(armada))
+        issue_order(state, planet.ID, target.ID, 20)
 
     return
 

@@ -32,18 +32,6 @@ def planet_will_lose(state):
             return True
     return False
 
-<<<<<<< HEAD
-def defend_boi_available(state):
-    logging.info('defend available ')
-    #wouldDie = []
-    for planet in state.my_planets():
-        #turn = 0
-        for size in effective_size(state, planet):
-            if size < 1 and reaction_time(state, planet) > -1:
-                return True  # wouldDie.append((planet, turn))
-    return False
-            #turn += 1
-=======
 
 def defend_boi_available(state):
     logging.info('defend check ')
@@ -53,7 +41,6 @@ def defend_boi_available(state):
                 logging.info('defend available ')
                 return True
     return False
->>>>>>> master
 
 
 
