@@ -47,60 +47,25 @@ def spread_to_weakest_neutral_planet(state):
         return issue_order(state, strongest_planet.ID, weakest_planet.ID, weakest_planet.num_ships + 1)
 
 
-def spread_best_neutral(state):
-    # closest & weakest neutral is target
-    chosen_one = None
-    #for chosen_one in state.neutral_planets():
-
-    return
-
-
-def attack_best_enemy(state):
-    # closest & weakest enemy is the target
-    return
-
-
-#def balance_our_planets(state): # warner
-    # check if one planet has less than the average.
-    # find the difference, average that dif value and average it by total num of our planets
-    #       send that average ship number from every our_planet to the weak_planet while
-    #       the planet_ship_count is < average for the weak_planet
-    #return
-
-
-def combined_attack(state): # warner
-
-    # find a best_enemy_planet, find out its ship value
-    # target_planet will be attacked by (target_planet.shipcount + reacting_time(?) )
-    return
-
-
-#thresh
-def threshold(state, target):
-    average = sum(planet.num_ships for planet in state.my_planets()) / len(state.my_planets) # how to write?
-    upper = average + (average * 0.2) # upper bound of threshold
-    lower = average - (average * 0.2) # lower ^^^^^^^^^^^^^^^^^^
-    ret_val = 0 # return value
-
-    if target > upper: # if target is greater than upper threshold --> means it is sufficiently large
-        ret_val = 1
-    elif target < lower: # if target is fewer than lower threshold --> means too weak
-        ret_val = -1
-    elif target <= upper and target >= lower: # sweet spot, planets in this range are average size
-        ret_val = 0
-    else:
-        return ret_val
-    return ret_val
-
-
 def defend_boi(state): # warner
-    canBeSaved = []
+    wouldDie = []
     for planet in state.my_planets():
+        turn = 0
         for size in effective_size(state, planet):
             if size < 1 and reaction_time(state, planet) > -1:
-                canBeSaved.append(planet)
+                wouldDie.append((planet, turn))
+            turn += 1
 
-    
+    for planet, turn in wouldDie:
+        armada = []
+        closest = closest_planets(state, planet)
+        for support in closest:
+            if state.distance(support.ID, planet.ID) > turn:
+                break
+            elif threshold(state, support) != -1:
+                armada.append(support)
+        combined_move(state, planet, armada)
+
 
 def snipe_boi(state): #caetano
     # make empty dict for storing, index is a neutral planet targeted by an enemy fleet, stores tuples.
@@ -129,10 +94,10 @@ def snipe_boi(state): #caetano
 
 
 def spread_to_best_neutral(state):
-    if not state.neutral_planets:
+    if not state.neutral_planets():
         return False
 
-    bestTarget = state.neutral_planets[0]
+    bestTarget = state.neutral_planets()[0]
     bestTime = reaction_time(state, bestTarget)
     for nPlanet in state.neutral_planets():
         nReaction = reaction_time(state, nPlanet)
@@ -167,11 +132,34 @@ def combined_move(state, target, armada): # warner
     if target.owner == 1:
         friendly = True
 
-    lastFleetTime = state.distance(armada[len(armada)-1], target)
+    turn = 0
     targetSize = target.num_ships
+    for size in effective_size(state, target):
+        if size < 1:
+            break
+        turn += 1
+        targetSize = size
+
     # send ships from each planet in armada
-    #for planet in armada:
+    for planet in armada:
+        issue_order(state, planet.ID, target.ID, targetSize / len(armada))
 
     return
 
 
+#thresh
+def threshold(state, target):
+    average = sum(planet.num_ships for planet in state.my_planets()) / len(state.my_planets) # how to write?
+    upper = average + (average * 0.2) # upper bound of threshold
+    lower = average - (average * 0.2) # lower ^^^^^^^^^^^^^^^^^^
+    ret_val = 0 # return value
+
+    if target > upper: # if target is greater than upper threshold --> means it is sufficiently large
+        ret_val = 1
+    elif target < lower: # if target is fewer than lower threshold --> means too weak
+        ret_val = -1
+    elif target <= upper and target >= lower: # sweet spot, planets in this range are average size
+        ret_val = 0
+    else:
+        return ret_val
+    return ret_val
