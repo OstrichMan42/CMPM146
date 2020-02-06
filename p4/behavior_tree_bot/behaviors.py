@@ -94,50 +94,13 @@ def threshold(state, target):
 
 
 def defend_boi(state): # warner
-    ships_to_send = 0
+    canBeSaved = []
+    for planet in state.my_planets():
+        for size in effective_size(state, planet):
+            if size < 1 and reaction_time(state, planet) > -1:
+                canBeSaved.append(planet)
 
-    counter = 0
-    average = 0
-    diff    = 0
-
-    weak_list   = []
-    strong_list = []
-    weakest     = 10000
-    strongest   = 0 #(?)
-    weakestID = 0
-
-
-    for planet in state.my_planets(): # stores small ship count in small, big ship count in big
-
-        if threshold(state, planet) < 0:
-            weak_list.append(planet)
-
-            if weak_list[planet] < weakest: # finds weakest planet
-                weakest = planet.num_ships
-                weakestID = planet.ID
-
-        elif threshold(state, planet) > 0:
-
-            strong_list.append(planet)
-
-
-    # find closest big planet to weakest
-    #for find_support in state.my_planets(): # find weakest to support
-        #if find_support.num_ships == weakest:
-    for supporter in closest_planets(state, find_support): # from perspective of weakest, find the closest planet that meets threshold
-
-        if supporter in strong_list: # this is one of the strong planets
-              #do_thing=1
-                issue_order(state, supporter.ID, weakestID,  )
-        if threshold(state, supporter) <= 0: # less than sufficiently large
-                  continue
-
-canBeSaved = []
-for planet in state.my_planets():
-    for size in effective_size(state, planet):
-        if size < 1 and reaction_time(state, planet) > -1:
-            canBeSaved.append(planet)
-
+    
 
 def snipe_boi(state): #caetano
     # make empty dict for storing, index is a neutral planet targeted by an enemy fleet, stores tuples.
