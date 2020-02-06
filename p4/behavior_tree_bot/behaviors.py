@@ -86,11 +86,11 @@ def snipe_boi(state): #caetano
     for snipe in snipes:
         if reaction_time(state, snipe) > 0 and 0 < snipes[snipe][0] < 21:
             closest = closest_planets(state, snipe)
-            div = len(closest)
             for boi in closest:
-                issue_order(state, boi.ID, snipe.ID, ceil(snipes[snipe][0] + 1 / div))
-
-    return True
+                if state.distance(boi.ID, snipe.ID) == snipes[snipe][1]+1 and threshold(state, boi) > 0:
+                    issue_order(state, boi.ID, snipe.ID, ceil(snipes[snipe][0] + 1))
+                    return True
+    return False
 
 
 def spread_to_best_neutral(state):
@@ -149,16 +149,16 @@ def combined_move(state, target, armada): # warner
 
 #thresh
 def threshold(state, target):
-    average = sum(planet.num_ships for planet in state.my_planets()) / len(state.my_planets) # how to write?
+    average = sum(planet.num_ships for planet in state.my_planets()) / len(state.my_planets())
     upper = average + (average * 0.2) # upper bound of threshold
     lower = average - (average * 0.2) # lower ^^^^^^^^^^^^^^^^^^
     ret_val = 0 # return value
 
-    if target > upper: # if target is greater than upper threshold --> means it is sufficiently large
+    if target.num_ships > upper: # if target is greater than upper threshold --> means it is sufficiently large
         ret_val = 1
-    elif target < lower: # if target is fewer than lower threshold --> means too weak
+    elif target.num_ships < lower: # if target is fewer than lower threshold --> means too weak
         ret_val = -1
-    elif target <= upper and target >= lower: # sweet spot, planets in this range are average size
+    elif target.num_ships <= upper and target.num_ships >= lower: # sweet spot, planets in this range are average size
         ret_val = 0
     else:
         return ret_val
