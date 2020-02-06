@@ -16,6 +16,26 @@ DEBUG:root:Executing:Selector: High Level Ordering of Strategies
 DEBUG:root:Executing:Sequence: Snipe Strategy
 DEBUG:root:Executing:Check: snipe_available
 INFO:root:checking snipe available
+DEBUG:root:Result: Check: snipe_available -> Failure
+DEBUG:root:Result: Sequence: Snipe Strategy -> Failure
+DEBUG:root:Executing:Sequence: Offensive Strategy
+DEBUG:root:Executing:Check: have_largest_fleet
+DEBUG:root:Result: Check: have_largest_fleet -> Failure
+DEBUG:root:Result: Sequence: Offensive Strategy -> Failure
+DEBUG:root:Executing:Sequence: Spread Strategy
+DEBUG:root:Executing:Check: if_neutral_planet_available
+DEBUG:root:Result: Check: if_neutral_planet_available -> Success
+DEBUG:root:Executing:Action: spread_to_weakest_neutral_planet
+DEBUG:root:Order:1 11 2.0
+DEBUG:root:Result: Action: spread_to_weakest_neutral_planet -> Success
+DEBUG:root:Result: Sequence: Spread Strategy -> Success
+DEBUG:root:Result: Selector: High Level Ordering of Strategies -> Success
+DEBUG:root:Finish turn
+
+DEBUG:root:Executing:Selector: High Level Ordering of Strategies
+DEBUG:root:Executing:Sequence: Snipe Strategy
+DEBUG:root:Executing:Check: snipe_available
+INFO:root:checking snipe available
 ERROR:root:Error in bot.
 Traceback (most recent call last):
   File "behavior_tree_bot/bt_bot.py", line 69, in <module>
@@ -34,6 +54,6 @@ Traceback (most recent call last):
     result = fn(self, state)
   File "C:\Users\xenok\OneDrive\Desktop\School Work\Game AI\CMPM146\p4\behavior_tree_bot\bt_nodes.py", line 77, in execute
     return self.check_function(state)
-  File "C:\Users\xenok\OneDrive\Desktop\School Work\Game AI\CMPM146\p4\behavior_tree_bot\checks.py", line 37, in snipe_available
-    for fleet in state.enemy_fleets:
-TypeError: 'method' object is not iterable
+  File "C:\Users\xenok\OneDrive\Desktop\School Work\Game AI\CMPM146\p4\behavior_tree_bot\checks.py", line 39, in snipe_available
+    if target.owner == 0 and -3 < reaction_time(state, target):
+AttributeError: 'int' object has no attribute 'owner'

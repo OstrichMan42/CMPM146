@@ -35,7 +35,7 @@ def snipe_available(state):
     # make empty dict for storing, stores amount of enemy ships that will be in the planet once all fleets arrive
     snipes = {}
     for fleet in state.enemy_fleets():
-        target = fleet.target_planet
+        target = state.planets[fleet.destination_planet]
         if target.owner == 0 and -3 < reaction_time(state, target):
             if target not in snipes:
                 snipes[target] = fleet.num_ships - target.num_ships

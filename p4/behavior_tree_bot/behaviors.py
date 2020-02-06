@@ -116,7 +116,7 @@ def snipe_boi(state): #caetano
     logging.info('sniping')
     snipes = {}
     for fleet in state.enemy_fleets:
-        target = fleet.target_planet
+        target = state.planets[fleet.destination_planet]
         if target.owner == 0 and -3 < reaction_time(state, target):
             if target not in snipes:
                 snipes[target] = (fleet.num_ships - target.num_ships, fleet.turns_remaining - fleet.turns_remaining * target.growth_rate)
