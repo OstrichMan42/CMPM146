@@ -42,10 +42,15 @@ def setup_behavior_tree():
     spread_action = Action(spread_to_weakest_neutral_planet)
     spread_sequence.child_nodes = [neutral_planet_check, spread_action]
 
+    defense_plan = Sequence(name= 'Defensive Strategy')
+    defend_boi_check = Check(defend_boi_availble)
+    defend_action = Action(defend_boi)
+    defense_plan.child_nodes = [defend_boi_check, defend_action]
+
     '''
     snipe_plan,
     '''
-    root.child_nodes = [snipe_plan, offensive_plan, spread_sequence, attack.copy()]
+    root.child_nodes = [snipe_plan, offensive_plan, spread_sequence, defend_boi, attack.copy()]
 
     logging.info('\n' + root.tree_to_string())
     return root
