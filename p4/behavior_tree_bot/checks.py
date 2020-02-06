@@ -32,6 +32,7 @@ def planet_will_lose(state):
             return True
     return False
 
+<<<<<<< HEAD
 def defend_boi_available(state):
     logging.info('defend available ')
     #wouldDie = []
@@ -42,6 +43,16 @@ def defend_boi_available(state):
                 return True  # wouldDie.append((planet, turn))
     return False
             #turn += 1
+=======
+
+def defend_boi_available(state):
+    logging.info('defend available ')
+    for planet in state.my_planets():
+        for size in effective_size(state, planet):
+            if size < 1 and reaction_time(state, planet) > -5:
+                return True
+    return False
+>>>>>>> master
 
 
 
@@ -68,7 +79,7 @@ def snipe_available(state):
 
 # returns enemy_reaction_time - our_reaction_time
 def reaction_time(state, target_planet):
-    logging.info('reaction time ')
+    #logging.info('reaction time ')
     enemyPlanet = closest_enemy(state, target_planet)
     myPlanet = closest_friendly(state, target_planet)
 
@@ -80,7 +91,7 @@ def reaction_time(state, target_planet):
 
 # returns target_planet's closest relevant friendly neighbor
 def closest_friendly(state, target_planet):
-    logging.info('closest friendly ')
+    #logging.info('closest friendly ')
     bestPlanet = target_planet
     myReaction = 200
     for myPlanet in state.my_planets():
@@ -94,7 +105,7 @@ def closest_friendly(state, target_planet):
 
 # returns target_planet's closest relevant hostile neighbor
 def closest_enemy(state, target_planet):
-    logging.info('closest_enemy ')
+    #logging.info('closest_enemy ')
     bestPlanet = target_planet
     enemyReaction = 200
     for enemyPlanet in state.enemy_planets():
@@ -108,7 +119,7 @@ def closest_enemy(state, target_planet):
 
 # return size of planet after all fleets arrive
 def effective_size(state, planet):
-    logging.info('effective size ')
+    #logging.info('effective size ')
     sizeAtTurn = []
     if planet.owner == 1: #friendly planet
         sizeAtTurn = [planet.num_ships, planet.num_ships + planet.growth_rate, planet.num_ships + planet.growth_rate * 2,
