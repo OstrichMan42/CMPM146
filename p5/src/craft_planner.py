@@ -104,16 +104,16 @@ if __name__ == '__main__':
     with open('Crafting.json') as f:
         Crafting = json.load(f)
 
-    # # List of items that can be in your inventory:
-    # print('All items:', Crafting['Items'])
-    #
-    # # List of items in your initial inventory with amounts:
-    # print('Initial inventory:', Crafting['Initial'])
-    #
-    # # List of items needed to be in your inventory at the end of the plan:
-    # print('Goal:',Crafting['Goal'])
-    #
-    # # Dict of crafting recipes (each is a dict):
+    # List of items that can be in your inventory:
+    print('All items:', Crafting['Items'])
+
+    # List of items in your initial inventory with amounts:
+    print('Initial inventory:', Crafting['Initial'])
+
+    # List of items needed to be in your inventory at the end of the plan:
+    print('Goal:',Crafting['Goal'])
+
+    # Dict of crafting recipes (each is a dict):
     # print('Example recipe:','craft stone_pickaxe at bench ->',Crafting['Recipes']['craft stone_pickaxe at bench'])
 
     # Build rules
