@@ -122,7 +122,7 @@ def heuristic(new_state, is_goal):
             new_state["furnace"] > 1 or \
             new_state["iron_axe"] > 1 or \
             new_state["iron_pickaxe"] > 1 or \
-            new_state["ingot"] > 6 or \
+            new_state["ingot"] > 5 or \
             new_state["ore"] > 1 or \
             new_state["plank"] > 7 or \
             new_state["rail"] > 32 or \
@@ -156,6 +156,7 @@ def search(graph, state, is_goal, limit, heuristic):
         dist, current = heappop(queue)
 
         if is_goal(current):
+            print("search took", time() - start_time, 'seconds. Cost is', myCost[current], "and visited", len(myCost))
             return reconstruct_path(previous, current)
 
 
@@ -221,7 +222,7 @@ if __name__ == '__main__':
     state.update(Crafting['Initial'])
 
     # Search for a solution
-    resulting_plan = search(graph, state, is_goal, 90, heuristic)
+    resulting_plan = search(graph, state, is_goal, 30, heuristic)
 
     if resulting_plan:
         # Print resulting plan
