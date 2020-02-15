@@ -157,8 +157,7 @@ def search(graph, state, is_goal, limit, heuristic):
 
         if is_goal(current):
             print("search took", time() - start_time, 'seconds. Cost is', myCost[current], "and visited", len(myCost))
-            return reconstruct_path(previous, current)
-
+            return reconstruct_path(previous, current) 
 
         for action, new_state, cost in graph(current):
 
