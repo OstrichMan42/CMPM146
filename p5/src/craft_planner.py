@@ -1,6 +1,10 @@
+# structure of A* from https://en.wikipedia.org/wiki/A*_search_algorithm#Pseudocode
+
 import json
 from collections import namedtuple, defaultdict, OrderedDict
 from timeit import default_timer as time
+from heapq import heappop, heappush
+from math import inf
 
 Recipe = namedtuple('Recipe', ['name', 'check', 'effect', 'cost'])
 
@@ -41,6 +45,14 @@ def make_checker(rule):
     def check(state):
         # This code is called by graph(state) and runs millions of times.
         # Tip: Do something with rule['Consumes'] and rule['Requires'].
+        if "Consumes" in rule:
+            for need in rule["Consumes"]:
+                if rule["Consumes"][need] > state[need]:
+                    return False
+        if "Requires" in rule:
+            for need in rule["Requires"]:
+                if rule["Requires"][need] > state[need]:
+                    return False
         return True
 
     return check
@@ -54,7 +66,18 @@ def make_effector(rule):
     def effect(state):
         # This code is called by graph(state) and runs millions of times
         # Tip: Do something with rule['Produces'] and rule['Consumes'].
-        next_state = None
+        next_state = State.copy(state)
+        #print(next_state, "here")
+
+        if "Consumes" in rule:
+            # iterate through all resources consumed and subtract them from the current state
+            for used in rule["Consumes"]:
+                next_state[used] -= rule["Consumes"][used]
+
+        # iterate through all resources produced and add them to the current state
+        for used in rule["Produces"]:
+            next_state[used] += rule["Produces"][used]
+
         return next_state
 
     return effect
@@ -66,7 +89,11 @@ def make_goal_checker(goal):
 
     def is_goal(state):
         # This code is used in the search process and may be called millions of times.
-        return False
+        for need in goal:
+            #print("I need ", need)
+            if goal[need] > state[need]:
+                return False
+        return True
 
     return is_goal
 
@@ -80,9 +107,34 @@ def graph(state):
             yield (r.name, r.effect(state), r.cost)
 
 
-def heuristic(state):
-    # Implement your heuristic here!
-    return 0
+def heuristic(new_state, is_goal):
+    est = 1
+
+
+    if is_goal(new_state):
+        return 0
+
+    # Check if the new state would have more of a material than is really necessary
+    if new_state["bench"] > 1 or \
+            new_state["cart"] > 1 or \
+            new_state["coal"] > 1 or \
+            new_state["cobble"] > 8 or \
+            new_state["furnace"] > 1 or \
+            new_state["iron_axe"] > 1 or \
+            new_state["iron_pickaxe"] > 1 or \
+            new_state["ingot"] > 6 or \
+            new_state["ore"] > 1 or \
+            new_state["plank"] > 7 or \
+            new_state["rail"] > 32 or \
+            new_state["stick"] > 4 or \
+            new_state["stone_axe"] > 1 or \
+            new_state["stone_pickaxe"] > 1 or \
+            new_state["wood"] > 1 or \
+            new_state["wooden_axe"] > 1 or \
+            new_state["wooden_pickaxe"] > 1:
+        return inf
+
+    return est
 
 def search(graph, state, is_goal, limit, heuristic):
 
@@ -92,13 +144,50 @@ def search(graph, state, is_goal, limit, heuristic):
     # When you find a path to the goal return a list of tuples [(state, action)]
     # representing the path. Each element (tuple) of the list represents a state
     # in the path and the action that took you to this state
+    queue = []
+    estCost = {}
+    myCost = {}
+    previous = {}
+    myCost[state] = 0
+    estCost[state] = 0
+
+    heappush(queue, (0, state))
     while time() - start_time < limit:
+        dist, current = heappop(queue)
+
+        if is_goal(current):
+            return reconstruct_path(previous, current)
+
+
+        for action, new_state, cost in graph(current):
+
+            tentativeCost = myCost[current] + cost
+
+            if new_state not in myCost or tentativeCost < myCost[new_state]:
+                previous[new_state] = (current, action)
+                myCost[new_state] = tentativeCost
+                estCost[new_state] = tentativeCost + heuristic(new_state, is_goal)
+                if new_state not in queue:
+                    heappush(queue, (estCost[new_state], new_state))
+
         pass
 
     # Failed to find a path
     print(time() - start_time, 'seconds.')
     print("Failed to find a path from", state, 'within time limit.')
     return None
+
+
+# key is a state and the values are the previous state and the action taken to the key
+def reconstruct_path(previous, current):
+    total_path = []
+    while current in previous:
+        # print(current)
+        total_path.insert(0, previous[current])
+        current, action = previous[current]
+
+    return total_path
+
 
 if __name__ == '__main__':
     with open('Crafting.json') as f:
@@ -132,7 +221,7 @@ if __name__ == '__main__':
     state.update(Crafting['Initial'])
 
     # Search for a solution
-    resulting_plan = search(graph, state, is_goal, 5, heuristic)
+    resulting_plan = search(graph, state, is_goal, 90, heuristic)
 
     if resulting_plan:
         # Print resulting plan
