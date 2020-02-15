@@ -45,14 +45,15 @@ def make_checker(rule):
     def check(state):
         # This code is called by graph(state) and runs millions of times.
         # Tip: Do something with rule['Consumes'] and rule['Requires'].
-        if "Consumes" in rule:
-            for need in rule["Consumes"]:
-                if rule["Consumes"][need] > state[need]:
-                    return False
+        print("Checking", rule)
+        for need in rule["Produces"]:
+            if rule["Produces"][need] > state[need]:
+                return False
         if "Requires" in rule:
             for need in rule["Requires"]:
-                if rule["Requires"][need] > state[need]:
+                if state[need] < 1:
                     return False
+        print("I can enter", state)
         return True
 
     return check
@@ -72,11 +73,11 @@ def make_effector(rule):
         if "Consumes" in rule:
             # iterate through all resources consumed and subtract them from the current state
             for used in rule["Consumes"]:
-                next_state[used] -= rule["Consumes"][used]
+                next_state[used] += rule["Consumes"][used]
 
         # iterate through all resources produced and add them to the current state
         for used in rule["Produces"]:
-            next_state[used] += rule["Produces"][used]
+            next_state[used] -= rule["Produces"][used]
 
         return next_state
 
@@ -89,10 +90,13 @@ def make_goal_checker(goal):
 
     def is_goal(state):
         # This code is used in the search process and may be called millions of times.
-        for need in goal:
+        for need in state:
             #print("I need ", need)
-            if goal[need] > state[need]:
+            if need not in goal and state[need] > 0:
                 return False
+            if need in goal:
+                if goal[need] != state[need]:
+                    return False
         return True
 
     return is_goal
@@ -151,13 +155,16 @@ def search(graph, state, is_goal, limit, heuristic):
     myCost[state] = 0
     estCost[state] = 0
 
+    print("Goal regression inv:", state)
+
     heappush(queue, (0, state))
+    print(queue)
     while time() - start_time < limit:
         dist, current = heappop(queue)
 
         if is_goal(current):
             print("search took", time() - start_time, 'seconds. Cost is', myCost[current], "and visited", len(myCost))
-            return reconstruct_path(previous, current) 
+            return reconstruct_path(previous, current)
 
         for action, new_state, cost in graph(current):
 
@@ -183,7 +190,7 @@ def reconstruct_path(previous, current):
     total_path = []
     while current in previous:
         # print(current)
-        total_path.insert(0, previous[current])
+        total_path.append(previous[current])
         current, action = previous[current]
 
     return total_path
@@ -194,13 +201,13 @@ if __name__ == '__main__':
         Crafting = json.load(f)
 
     # List of items that can be in your inventory:
-    print('All items:', Crafting['Items'])
+    # print('All items:', Crafting['Items'])
 
     # List of items in your initial inventory with amounts:
     print('Initial inventory:', Crafting['Initial'])
 
     # List of items needed to be in your inventory at the end of the plan:
-    print('Goal:',Crafting['Goal'])
+    print('Goal:', Crafting['Goal'])
 
     # Dict of crafting recipes (each is a dict):
     # print('Example recipe:','craft stone_pickaxe at bench ->',Crafting['Recipes']['craft stone_pickaxe at bench'])
@@ -214,11 +221,13 @@ if __name__ == '__main__':
         all_recipes.append(recipe)
 
     # Create a function which checks for the goal
-    is_goal = make_goal_checker(Crafting['Goal'])
+    #is_goal = make_goal_checker(Crafting['Goal'])
+    is_goal = make_goal_checker(Crafting['Initial']) # this one is for regression
 
     # Initialize first state from initial inventory
     state = State({key: 0 for key in Crafting['Items']})
-    state.update(Crafting['Initial'])
+    #state.update(Crafting['Initial'])
+    state.update(Crafting['Goal'])  # this one is for regression
 
     # Search for a solution
     resulting_plan = search(graph, state, is_goal, 30, heuristic)
