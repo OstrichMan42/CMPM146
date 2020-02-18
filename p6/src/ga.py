@@ -50,7 +50,7 @@ class Individual_Grid(object):
             pathPercentage=0.5,
             emptyPercentage=0.6,
             linearity=-0.5,
-            solvability=2.0
+            solvability=3.0
         )
         self._fitness = sum(map(lambda m: coefficients[m] * measurements[m],
                                 coefficients))
@@ -72,6 +72,8 @@ class Individual_Grid(object):
         right = width - 1
         for y in range(height):
             for x in range(left, right):
+                if y == height - 1:
+                    pass
                 pass
         return genome
 
@@ -85,6 +87,8 @@ class Individual_Grid(object):
         for y in range(height):
             for x in range(left, right):
                 # STUDENT Which one should you take?  Self, or other?  Why?
+                if x % 20 > 9: # change parent every 10 blocks horizontally
+                    pass
                 # STUDENT consider putting more constraints on this to prevent pipes in the air, etc
                 pass
         # do mutation; note we're returning a one-element tuple here
@@ -159,6 +163,7 @@ class Individual_DE(object):
         # STUDENT Improve this with any code you like
         coefficients = dict(
             meaningfulJumpVariance=0.5,
+            meaningfulJumps=1.5,
             negativeSpace=0.6,
             pathPercentage=0.5,
             emptyPercentage=0.6,
