@@ -131,7 +131,7 @@ class Individual_Grid(object):
         # STUDENT consider putting more constraints on this to prevent pipes in the air, etc
         left = random.randint(1, width - 5)
         distance = random.randint(10, 32)
-        for posx in range(1, distance):
+        for posx in range(left, min(left + distance, width - 5)):
             for posy in range(1, height - 1):
                 genome[posy][posx] = "-"
             genome[15][posx] = "X"
@@ -181,7 +181,7 @@ class Individual_Grid(object):
                             genome[posy][posx] = "M"
 
                     elif chance > 0.1 and chance <= 0.2:
-                        genome[posy][posx] = "O"
+                        genome[posy][posx] = "o"
                     elif chance > 0.2 and chance <= 0.4 and genome[posy + 1][posx] in solid:
                         genome[posy][posx] = "E"
 
@@ -285,7 +285,7 @@ class Individual_Grid(object):
                             g[posy][posx] = "M"
 
                     elif chance > 0.1 and chance <= 0.2 and g[posy][posx] != "|":
-                        g[posy][posx] = "O"
+                        g[posy][posx] = "o"
                     elif chance > 0.2 and chance <= 0.4 and g[posy + 1][posx] in solid:
                         g[posy][posx] = "E"
                     
@@ -525,7 +525,7 @@ def generate_successors(population):
     results = []
     # Tournament
     TOURNAMENT_SIZE = 16
-    PROBABILITY = 0.75
+    PROBABILITY = 0.8
 
     for j in range(len(population)):
         tournament = []
@@ -550,7 +550,7 @@ def generate_successors(population):
 
 def ga():
     # STUDENT Feel free to play with this parameter
-    pop_limit = 480
+    pop_limit = 96
     # Code to parallelize some computations
     batches = os.cpu_count()
     if pop_limit % batches != 0:
