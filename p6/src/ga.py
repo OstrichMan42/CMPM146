@@ -531,7 +531,7 @@ def generate_successors(population):
 
     bracket = []
     for j in range(len(population)):
-        bracket.append(population[j].generate_children(random.choice(population)))
+        bracket.append(population[j].generate_children(random.choice(population))[0])
 
     for j in range(len(bracket)):
         tournament = []
