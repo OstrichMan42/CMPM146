@@ -295,7 +295,8 @@ class Individual_Grid(object):
                     
         g[14][0] = "m"
         g[7][-1] = "v"
-        g[8:14][-1] = ["f"] * 6
+        for col in range(8, 14):
+            g[col][-1] = "f"
         g[14:16][-1] = ["X", "X"]
         return cls(g)
 
