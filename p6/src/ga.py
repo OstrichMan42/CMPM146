@@ -132,6 +132,7 @@ class Individual_Grid(object):
         left = random.randint(1, 195)
         distance = random.randint(10, 32)
         for posx in range(left, min(194, left + distance)):
+            choice = random.random()
             if genome[15][posx] == "X":
                 choice = random.random()
             if choice < 0.2:
@@ -166,7 +167,7 @@ class Individual_Grid(object):
                         blockpara2 = 1
 
                     chance = random.random()
-                    if reachable(g, posx, posy):
+                    if reachable(genome, posx, posy):
                         if chance <= 0.1 * blockpara1 * blockpara2:
                             chance = random.random()
                             if chance <= 0.1:
