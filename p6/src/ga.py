@@ -172,7 +172,7 @@ class Individual_Grid(object):
                             if genome[posy][posx] == "T":
                                 cury = posy + 1
                                 while gendone[cury][posx] == "|":
-                                    gendone[cury][posx] == "-":
+                                    if gendone[cury][posx] == "-":
                                      cury += 1
                             chance = random.random()
                             if chance <= 0.1:
@@ -195,14 +195,14 @@ class Individual_Grid(object):
                             if genome[posy][posx] == "T":
                                 cury = posy + 1
                                 while gendone[cury][posx] == "|":
-                                    gendone[cury][posx] == "-":
+                                    if gendone[cury][posx] == "-":
                                      cury += 1
                         elif chance > 0.2 and chance <= 0.4 and genome[posy + 1][posx] in solid:
                             genome[posy][posx] = "E"
                             if genome[posy][posx] == "T":
                                 cury = posy + 1
                                 while gendone[cury][posx] == "|":
-                                    gendone[cury][posx] == "-":
+                                    if gendone[cury][posx] == "-":
                                      cury += 1
             counter += 1
 
