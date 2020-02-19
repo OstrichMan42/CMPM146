@@ -141,26 +141,26 @@ class Individual_Grid(object):
         while left + counter < 195 and counter < distance:
             posx = left + counter
             for posy in range(height - 2, height - 4, -1):
-                if g[15][posx] == "X":
+                if genome[15][posx] == "X":
                     choice = random.random()
                     if choice < 0.2:
                         block = random.randint(1, 9)
-                        g[15][posx : posx + block] = ["-"] * block
+                        genome[15][posx : posx + block] = ["-"] * block
 
                 for posy in range(height - 2, height - 4, -1):
                     chance = random.random()
-                    if g[posy + 1][posx] == "X" and chance <= 0.1:
-                        g[posy][posx] = "E"
-                    elif chance >= 0.85 and g[15][posx] in solid:
-                        g[posy][posx] = "o"
+                    if genome[posy + 1][posx] == "X" and chance <= 0.1:
+                        genome[posy][posx] = "E"
+                    elif chance >= 0.85 and genome[15][posx] in solid:
+                        genome[posy][posx] = "o"
                     
                 for posy in range(height - 4, -1, -1):
 
-                    if g[posy + 2][posx] in solid:
+                    if genome[posy + 2][posx] in solid:
                         blockpara1 = 0.1
                     else:
                         blockpara1 = 1
-                    if g[posy + 1][posx] in solid:
+                    if genome[posy + 1][posx] in solid:
                         blockpara2 = 0.1
                     else:
                         blockpara2 = 1
@@ -170,24 +170,24 @@ class Individual_Grid(object):
                         if chance <= 0.1 * blockpara1 * blockpara2:
                             chance = random.random()
                             if chance <= 0.1:
-                                g[posy][posx] = "T"
+                                genome[posy][posx] = "T"
                                 cury = posy + 1
-                                while cury < 16 and g[cury][posx] not in solid:
-                                    g[cury][posx] = "|"
+                                while cury < 16 and genome[cury][posx] not in solid:
+                                    genome[cury][posx] = "|"
                                     cury += 1
                             elif chance <= 0.2:
-                                g[posy][posx] = "?"
+                                genome[posy][posx] = "?"
                             elif chance <= 0.5:
-                                g[posy][posx] = "X"
+                                genome[posy][posx] = "X"
                             elif chance <= 0.8:
-                                g[posy][posx] = "B"
+                                genome[posy][posx] = "B"
                             elif chance <= 1:
-                                g[posy][posx] = "M"
+                                genome[posy][posx] = "M"
 
                         elif chance > 0.1 and chance <= 0.2:
-                            g[posy][posx] = "O"
-                        elif chance > 0.2 and chance <= 0.4 and g[posy + 1][posx] in solid:
-                            g[posy][posx] = "E"
+                            genome[posy][posx] = "O"
+                        elif chance > 0.2 and chance <= 0.4 and genome[posy + 1][posx] in solid:
+                            genome[posy][posx] = "E"
             counter += 1
 
         return genome
