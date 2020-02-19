@@ -190,14 +190,14 @@ class Individual_Grid(object):
                             elif chance <= 1:
                                 genome[posy][posx] = "M"
 
-                        elif chance > 0.1 and chance <= 0.2:
+                        elif 0.1 < chance <= 0.2:
                             genome[posy][posx] = "O"
                             if genome[posy][posx] == "T":
                                 cury = posy + 1
                                 while genome[cury][posx] == "|":
                                     if genome[cury][posx] == "-":
                                      cury += 1
-                        elif chance > 0.2 and chance <= 0.4 and genome[posy + 1][posx] in solid:
+                        elif 0.2 < chance <= 0.4 and genome[posy + 1][posx] in solid:
                             genome[posy][posx] = "E"
                             if genome[posy][posx] == "T":
                                 cury = posy + 1
@@ -220,13 +220,12 @@ class Individual_Grid(object):
                 # STUDENT Which one should you take?  Self, or other?  Why?
 
                 if x % width / 4 > width / 8:  # change parent every 10 blocks horizontally
-                    if random.random() < 0.1:  # Chance to be the opposite
+                    if random.random() < 0.1 and not new_genome[y][x] == "|":  # Chance to be the opposite
                         continue
                     new_genome[y][x] = other.genome[y][x]
                 else:
-                    if random.random() < 0.1:  # Chance to be the opposite
+                    if random.random() < 0.1 and not new_genome[y][x] == "|":  # Chance to be the opposite
                         new_genome[y][x] = other.genome[y][x]
-                        continue
                     # new_genome[y][x] = self[y][x]
 
                 # STUDENT consider putting more constraints on this to prevent pipes in the air, etc
@@ -545,14 +544,10 @@ def generate_successors(population):
     TOURNAMENT_SIZE = 16
     PROBABILITY = 0.75
 
-    bracket = []
     for j in range(len(population)):
-        bracket.append(population[j].generate_children(random.choice(population))[0])
-
-    for j in range(len(bracket)):
         tournament = []
         for i in range(TOURNAMENT_SIZE):
-            tournament.append(random.choice(bracket))
+            tournament.append(population[j].generate_children(random.choice(population))[0])
         tournament = sorted(tournament, key=Individual.fitness, reverse=True)
         weights = []
         for i in range(TOURNAMENT_SIZE):
