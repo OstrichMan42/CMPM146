@@ -184,7 +184,6 @@ class Individual_Grid(object):
                         genome[posy][posx] = "o"
                     elif chance > 0.2 and chance <= 0.4 and genome[posy + 1][posx] in solid:
                         genome[posy][posx] = "E"
-
         return genome
 
 
