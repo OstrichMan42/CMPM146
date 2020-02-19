@@ -129,7 +129,7 @@ class Individual_Grid(object):
         # STUDENT implement a mutation operator, also consider not mutating this individual
         # STUDENT also consider weighting the different tile types so it's not uniformly random
         # STUDENT consider putting more constraints on this to prevent pipes in the air, etc
-        left = random.randint(1, 199)
+        left = random.randint(1, 195)
         distance = random.randint(10, 32)
         for posx in range(left, min(199, left + distance)):
             if genome[15][posx] == "X":
@@ -581,7 +581,7 @@ def ga():
                             f.write("".join(row) + "\n")
                 generation += 1
                 # STUDENT Determine stopping condition
-                stop_condition = False
+                stop_condition = generation > 12
                 if stop_condition:
                     break
                 # STUDENT Also consider using FI-2POP as in the Sorenson & Pasquier paper
