@@ -26,8 +26,8 @@ options = [
     #"m"  # mario's start position, do not generate
 ]
 
-# The level as a grid of tiles
 
+# The level as a grid of tiles
 
 class Individual_Grid(object):
     __slots__ = ["genome", "_fitness"]
@@ -68,13 +68,12 @@ class Individual_Grid(object):
         # STUDENT also consider weighting the different tile types so it's not uniformly random
         # STUDENT consider putting more constraints on this to prevent pipes in the air, etc
 
-        left = 1
-        right = width - 1
-        for y in range(height):
-            for x in range(left, right):
-                if y == height - 1:
+        if random.random() < 0.1 and len(genome) > 0:
+            left = 1
+            right = width - 1
+            for y in range(height):
+                for x in range(left, right):
                     pass
-                pass
         return genome
 
     # Create zero or more children from self and other
@@ -87,11 +86,22 @@ class Individual_Grid(object):
         for y in range(height):
             for x in range(left, right):
                 # STUDENT Which one should you take?  Self, or other?  Why?
-                if x % 20 > 9: # change parent every 10 blocks horizontally
-                    pass
+
+                if x % width / 4 > width / 8:  # change parent every 10 blocks horizontally
+                    if random.random() < 0.1:  # Chance to be the opposite
+                        new_genome[y][x] = self[y][x]
+                        continue
+                    new_genome[y][x] = other[y][x]
+                else:
+                    if random.random() < 0.1:  # Chance to be the opposite
+                        new_genome[y][x] = other[y][x]
+                        continue
+                    new_genome[y][x] = self[y][x]
+
                 # STUDENT consider putting more constraints on this to prevent pipes in the air, etc
-                pass
+
         # do mutation; note we're returning a one-element tuple here
+        new_genome.mutate()
         return (Individual_Grid(new_genome),)
 
     # Turn the genome into a level string (easy for this genome)
@@ -351,7 +361,27 @@ Individual = Individual_Grid
 def generate_successors(population):
     results = []
     # STUDENT Design and implement this
-    # Hint: Call generate_children() on some individuals and fill up results.
+    # Tournament
+    TOURNAMENT_SIZE = 16
+    PROBABILITY = 0.75
+
+    for j in len(population):
+        tournament = []
+        for i in range(TOURNAMENT_SIZE):
+            tournament[i] = random.random(population)
+        tournament = sorted(tournament, key=Individual.fitness, reverse=True)
+        weights = []
+        for i in range(TOURNAMENT_SIZE):
+            weights[i] = PROBABILITY * (1-PROBABILITY) ** i
+
+        results[j] = random.choices(population, weights)
+
+    # Elitist
+    results = sorted(results, key=Individual.fitness())
+    i = 0
+    while results[i].fitness() < population[i].fitness():
+        results[i] = population[i]
+
     return results
 
 
