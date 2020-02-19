@@ -131,82 +131,62 @@ class Individual_Grid(object):
         # STUDENT consider putting more constraints on this to prevent pipes in the air, etc
         left = random.randint(1, width - 5)
         distance = random.randint(10, 32)
-        for posx in range(left, min(width - 6, left + distance)):
-            choice = random.random()
+        for posx in range(1, distance):
+            for posy in range(1, height - 1):
+                genome[posy][posx] = "-"
+            genome[15][posx] = "X"
+
+        for posx in range(left, min(left + distance, width - 5)):
             if genome[15][posx] == "X":
                 choice = random.random()
-            if choice < 0.1:
-                block = random.randint(1, 5)
-                genome[15][posx : posx + block] = ["-"] * block
-        counter = 0
-        while left + counter < 195 and counter < distance:
-            posx = left + counter
+                if choice < 0.1:
+                    block = random.randint(1, 5)
+                    genome[15][posx : posx + block] = ["-"] * block
+
             for posy in range(height - 2, height - 4, -1):
-                if genome[15][posx] == "X":
-                    choice = random.random()
-                    if choice < 0.2:
-                        block = random.randint(1, 9)
-                        genome[15][posx : posx + block] = ["-"] * block
-
-                for posy in range(height - 2, height - 4, -1):
-                    chance = random.random()
-                    if genome[posy + 1][posx] == "X" and chance <= 0.1:
-                        genome[posy][posx] = "E"
-                    elif chance >= 0.85 and genome[15][posx] in solid:
-                        genome[posy][posx] = "o"
+                chance = random.random()
+                if genome[posy + 1][posx] == "X" and chance <= 0.1:
+                    genome[posy][posx] = "E"
+                elif chance >= 0.85 and genome[15][posx] in solid:
+                    genome[posy][posx] = "o"
                     
-                for posy in range(height - 4, -1, -1):
+            for posy in range(height - 4, -1, -1):
 
-                    if genome[posy + 2][posx] in solid:
-                        blockpara1 = 0.1
-                    else:
-                        blockpara1 = 1
-                    if genome[posy + 1][posx] in solid:
-                        blockpara2 = 0.1
-                    else:
-                        blockpara2 = 1
+                if genome[posy + 2][posx] in solid:
+                    blockpara1 = 0.1
+                else:
+                    blockpara1 = 1
+                if genome[posy + 1][posx] in solid:
+                    blockpara2 = 0.1
+                else:
+                    blockpara2 = 1
 
-                    chance = random.random()
-                    if reachable(genome, posx, posy):
-                        if chance <= 0.1 * blockpara1 * blockpara2:
-                            if genome[posy][posx] == "T":
-                                cury = posy + 1
-                                while genome[cury][posx] == "|":
-                                    if genome[cury][posx] == "-":
-                                     cury += 1
-                            chance = random.random()
-                            if chance <= 0.1:
-                                genome[posy][posx] = "T"
-                                cury = posy + 1
-                                while cury < 16 and genome[cury][posx] not in solid:
-                                    genome[cury][posx] = "|"
-                                    cury += 1
-                            elif chance <= 0.2:
-                                genome[posy][posx] = "?"
-                            elif chance <= 0.5:
-                                genome[posy][posx] = "X"
-                            elif chance <= 0.8:
-                                genome[posy][posx] = "B"
-                            elif chance <= 1:
-                                genome[posy][posx] = "M"
+                chance = random.random()
+                if reachable(genome, posx, posy):
+                    if chance <= 0.1 * blockpara1 * blockpara2:
+                        chance = random.random()
+                        if chance <= 0.1:
+                            genome[posy][posx] = "T"
+                            cury = posy + 1
+                            while cury < 16 and genome[cury][posx] not in solid:
+                                genome[cury][posx] = "|"
+                                cury += 1
+                        elif chance <= 0.2:
+                            genome[posy][posx] = "?"
+                        elif chance <= 0.5:
+                            genome[posy][posx] = "X"
+                        elif chance <= 0.8:
+                            genome[posy][posx] = "B"
+                        elif chance <= 1:
+                            genome[posy][posx] = "M"
 
-                        elif 0.1 < chance <= 0.2:
-                            genome[posy][posx] = "O"
-                            if genome[posy][posx] == "T":
-                                cury = posy + 1
-                                while genome[cury][posx] == "|":
-                                    if genome[cury][posx] == "-":
-                                     cury += 1
-                        elif 0.2 < chance <= 0.4 and genome[posy + 1][posx] in solid:
-                            genome[posy][posx] = "E"
-                            if genome[posy][posx] == "T":
-                                cury = posy + 1
-                                while genome[cury][posx] == "|":
-                                    if genome[cury][posx] == "-":
-                                     cury += 1
-            counter += 1
+                    elif chance > 0.1 and chance <= 0.2:
+                        genome[posy][posx] = "O"
+                    elif chance > 0.2 and chance <= 0.4 and genome[posy + 1][posx] in solid:
+                        genome[posy][posx] = "E"
 
         return genome
+
 
     # Create zero or more children from self and other
     def generate_children(self, other):
@@ -215,16 +195,18 @@ class Individual_Grid(object):
         # do crossover with other
         left = 1
         right = width - 1
-        for y in range(height):
-            for x in range(left, right - 1):
-                # STUDENT Which one should you take?  Self, or other?  Why?
+        for x in range(left, right):
+            # STUDENT Which one should you take?  Self, or other?  Why?
 
-                if x % width / 4 > width / 8:  # change parent 8 times
-                    if random.random() < 0.1 and not new_genome[y][x] == "|":  # Chance to be the opposite
-                        continue
-                    new_genome[y][x] = other.genome[y][x]
+            if x % width / 4 > width / 8:  # change parent every 10 blocks horizontally
+                if random.random() < 0.1:  # Chance to be the opposite
+                    continue
                 else:
-                    if random.random() < 0.1 and not new_genome[y][x] == "|":  # Chance to be the opposite
+                    for y in range(0, height):
+                        new_genome[y][x] = other.genome[y][x]
+            else:
+                if random.random() < 0.1:  # Chance to be the opposite
+                    for y in range(0, height):
                         new_genome[y][x] = other.genome[y][x]
                     # new_genome[y][x] = self[y][x]
 
@@ -290,19 +272,19 @@ class Individual_Grid(object):
                         if chance <= 0.1:
                             g[posy][posx] = "T"
                             cury = posy + 1
-                            while cury < 16 and g[cury][posx] not in solid:
+                            while cury < 16 and g[cury][posx] != "X":
                                 g[cury][posx] = "|"
                                 cury += 1
-                        elif chance <= 0.2:
+                        elif chance <= 0.2 and chance > 0.1:
                             g[posy][posx] = "?"
-                        elif chance <= 0.5:
+                        elif chance <= 0.5 and chance > 0.2:
                             g[posy][posx] = "X"
-                        elif chance <= 0.8:
+                        elif chance <= 0.8 and chance > 0.5:
                             g[posy][posx] = "B"
-                        elif chance <= 1:
+                        elif chance <= 1 and chance > 0.8:
                             g[posy][posx] = "M"
 
-                    elif chance > 0.1 and chance <= 0.2:
+                    elif chance > 0.1 and chance <= 0.2 and g[posy][posx] != "|":
                         g[posy][posx] = "O"
                     elif chance > 0.2 and chance <= 0.4 and g[posy + 1][posx] in solid:
                         g[posy][posx] = "E"
@@ -310,8 +292,9 @@ class Individual_Grid(object):
         g[14][0] = "m"
         g[7][-1] = "v"
         for col in range(8, 14):
-            g[col][-1] = "f"
-        g[14:16][-1] = ["X", "X"]
+            g[col][width-1] = "f"
+        for col in range(14, 16):
+            g[col][width-1] = "X"
         return cls(g)
 
 
