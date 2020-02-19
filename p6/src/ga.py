@@ -523,7 +523,6 @@ Individual = Individual_Grid
 
 def generate_successors(population):
     results = []
-    # STUDENT Design and implement this
     # Tournament
     TOURNAMENT_SIZE = 16
     PROBABILITY = 0.75
@@ -537,7 +536,7 @@ def generate_successors(population):
         for i in range(TOURNAMENT_SIZE):
             weights[i] = PROBABILITY * (1-PROBABILITY) ** i
 
-        results[j] = random.choices(population, weights)
+        results[j] = random.choices(tournament, weights)
 
     # Elitist
     results = sorted(results, key=Individual.fitness())
