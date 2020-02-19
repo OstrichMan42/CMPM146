@@ -524,13 +524,13 @@ def generate_successors(population):
     for j in range(len(population)):
         tournament = []
         for i in range(TOURNAMENT_SIZE):
-            tournament[i] = random.choice(population)
+            tournament.append(random.choice(population))
         tournament = sorted(tournament, key=Individual.fitness, reverse=True)
         weights = []
         for i in range(TOURNAMENT_SIZE):
-            weights[i] = PROBABILITY * (1-PROBABILITY) ** i
+            weights.append(PROBABILITY * (1-PROBABILITY) ** i)
 
-        results[j] = random.choices(tournament, weights)
+        results.append(random.choices(tournament, weights))
 
     # Elitist
     results = sorted(results, key=Individual.fitness())
