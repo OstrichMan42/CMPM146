@@ -129,9 +129,9 @@ class Individual_Grid(object):
         # STUDENT implement a mutation operator, also consider not mutating this individual
         # STUDENT also consider weighting the different tile types so it's not uniformly random
         # STUDENT consider putting more constraints on this to prevent pipes in the air, etc
-        left = random.randint(1, 195)
+        left = random.randint(1, width - 5)
         distance = random.randint(10, 32)
-        for posx in range(left, min(194, left + distance)):
+        for posx in range(left, min(width - 6, left + distance)):
             choice = random.random()
             if genome[15][posx] == "X":
                 choice = random.random()
