@@ -527,7 +527,7 @@ def generate_successors(population):
     TOURNAMENT_SIZE = 16
     PROBABILITY = 0.75
 
-    for j in len(population):
+    for j in range(len(population)):
         tournament = []
         for i in range(TOURNAMENT_SIZE):
             tournament[i] = random.random(population)
