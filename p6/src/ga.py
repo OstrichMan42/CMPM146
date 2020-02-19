@@ -131,7 +131,7 @@ class Individual_Grid(object):
         # STUDENT consider putting more constraints on this to prevent pipes in the air, etc
         left = random.randint(1, width - 5)
         distance = random.randint(10, 32)
-        for posx in range(1, distance):
+        for posx in range(left, min(left + distance, width - 5)):
             for posy in range(1, height - 1):
                 genome[posy][posx] = "-"
             genome[15][posx] = "X"
@@ -184,7 +184,6 @@ class Individual_Grid(object):
                         genome[posy][posx] = "O"
                     elif chance > 0.2 and chance <= 0.4 and genome[posy + 1][posx] in solid:
                         genome[posy][posx] = "E"
-
         return genome
 
 
