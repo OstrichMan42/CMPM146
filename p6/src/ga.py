@@ -135,8 +135,8 @@ class Individual_Grid(object):
             choice = random.random()
             if genome[15][posx] == "X":
                 choice = random.random()
-            if choice < 0.2:
-                block = random.randint(1, 9)
+            if choice < 0.1:
+                block = random.randint(1, 5)
                 genome[15][posx : posx + block] = ["-"] * block
         counter = 0
         while left + counter < 195 and counter < distance:
@@ -169,6 +169,11 @@ class Individual_Grid(object):
                     chance = random.random()
                     if reachable(genome, posx, posy):
                         if chance <= 0.1 * blockpara1 * blockpara2:
+                            if genome[posy][posx] == "T":
+                                cury = posy + 1
+                                while genome[cury][posx] == "|":
+                                    if genome[cury][posx] == "-":
+                                     cury += 1
                             chance = random.random()
                             if chance <= 0.1:
                                 genome[posy][posx] = "T"
@@ -187,8 +192,18 @@ class Individual_Grid(object):
 
                         elif chance > 0.1 and chance <= 0.2:
                             genome[posy][posx] = "O"
+                            if genome[posy][posx] == "T":
+                                cury = posy + 1
+                                while genome[cury][posx] == "|":
+                                    if genome[cury][posx] == "-":
+                                     cury += 1
                         elif chance > 0.2 and chance <= 0.4 and genome[posy + 1][posx] in solid:
                             genome[posy][posx] = "E"
+                            if genome[posy][posx] == "T":
+                                cury = posy + 1
+                                while genome[cury][posx] == "|":
+                                    if genome[cury][posx] == "-":
+                                     cury += 1
             counter += 1
 
         return genome
@@ -247,8 +262,8 @@ class Individual_Grid(object):
         for posx in range(1, width - 5):
             if g[15][posx] == "X":
                 choice = random.random()
-                if choice < 0.2:
-                    block = random.randint(1, 9)
+                if choice < 0.1:
+                    block = random.randint(1, 5)
                     g[15][posx : posx + block] = ["-"] * block
 
             for posy in range(height - 2, height - 4, -1):
