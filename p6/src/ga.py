@@ -544,6 +544,7 @@ def generate_successors(population):
     i = 0
     while results[i].fitness() < population[i].fitness():
         results[i] = population[i]
+        i += 1
 
     return results
 
