@@ -134,9 +134,9 @@ class Individual_Grid(object):
         for posx in range(left, min(199, left + distance)):
             if genome[15][posx] == "X":
                 choice = random.random()
-            if choice < 0.2:
-                block = random.randint(1, 9)
-                genome[15][posx : posx + block] = ["-"] * block
+                if choice < 0.2:
+                    block = random.randint(1, 9)
+                    genome[15][posx : posx + block] = ["-"] * block
         counter = 0
         while left + counter < 200 and counter < distance:
             posx = left + counter
@@ -176,13 +176,10 @@ class Individual_Grid(object):
                     elif chance <= 1:
                         genome[posy][posx] = "M"
 
-                elif chance > 0.3 and chance <= 0.6:
+                elif 0.3 < chance <= 0.6:
                     genome[posy][posx] = "O"
-                elif chance > 0.6 and chance <= 0.8 and genome[posy + 1][posx] in solid:
+                elif 0.6 < chance <= 0.8 and genome[posy + 1][posx] in solid:
                     genome[posy][posx] = "E"
-        for y in range(height):
-            for x in range(left, right):
-                pass
         return genome
 
     # Create zero or more children from self and other
@@ -198,19 +195,18 @@ class Individual_Grid(object):
 
                 if x % width / 4 > width / 8:  # change parent every 10 blocks horizontally
                     if random.random() < 0.1:  # Chance to be the opposite
-                        new_genome[y][x] = self[y][x]
                         continue
-                    new_genome[y][x] = other[y][x]
+                    new_genome[y][x] = other.genome[y][x]
                 else:
                     if random.random() < 0.1:  # Chance to be the opposite
-                        new_genome[y][x] = other[y][x]
+                        new_genome[y][x] = other.genome[y][x]
                         continue
-                    new_genome[y][x] = self[y][x]
+                    # new_genome[y][x] = self[y][x]
 
                 # STUDENT consider putting more constraints on this to prevent pipes in the air, etc
 
         # do mutation; note we're returning a one-element tuple here
-        new_genome.mutate()
+        self.mutate(new_genome)
         return (Individual_Grid(new_genome),)
 
     # Turn the genome into a level string (easy for this genome)
@@ -521,10 +517,14 @@ def generate_successors(population):
     TOURNAMENT_SIZE = 16
     PROBABILITY = 0.75
 
+    bracket = []
     for j in range(len(population)):
+        bracket.append(population[j].generate_children(random.choice(population)))
+
+    for j in range(len(bracket)):
         tournament = []
         for i in range(TOURNAMENT_SIZE):
-            tournament.append(random.choice(population))
+            tournament.append(random.choice(bracket))
         tournament = sorted(tournament, key=Individual.fitness, reverse=True)
         weights = []
         for i in range(TOURNAMENT_SIZE):
