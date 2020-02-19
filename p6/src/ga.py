@@ -107,7 +107,7 @@ class Individual_Grid(object):
         # Default fitness function: Just some arbitrary combination of a few criteria.  Is it good?  Who knows?
         # STUDENT Modify this, and possibly add more metrics.  You can replace this with whatever code you like.
         coefficients = dict(
-            meaningfulJumpVariance=0.5,
+            meaningfulJumpVariance=1.5,
             negativeSpace=0.6,
             pathPercentage=0.5,
             emptyPercentage=0.6,
@@ -119,12 +119,6 @@ class Individual_Grid(object):
         return self
 
     # Return the cached fitness value or calculate it as needed.
-    def fitness(self):
-        if self._fitness is None:
-            self.calculate_fitness()
-        return self._fitness
-
-    # Mutate a genome into a new genome.  Note that this is a _genome_, not an individual!
     def fitness(self):
         if self._fitness is None:
             self.calculate_fitness()
@@ -530,7 +524,7 @@ def generate_successors(population):
     for j in range(len(population)):
         tournament = []
         for i in range(TOURNAMENT_SIZE):
-            tournament[i] = random.random(population)
+            tournament[i] = random.choice(population)
         tournament = sorted(tournament, key=Individual.fitness, reverse=True)
         weights = []
         for i in range(TOURNAMENT_SIZE):
