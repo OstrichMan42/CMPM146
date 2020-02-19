@@ -216,10 +216,10 @@ class Individual_Grid(object):
         left = 1
         right = width - 1
         for y in range(height):
-            for x in range(left, right):
+            for x in range(left, right - 1):
                 # STUDENT Which one should you take?  Self, or other?  Why?
 
-                if x % width / 4 > width / 8:  # change parent every 10 blocks horizontally
+                if x % width / 4 > width / 8:  # change parent 8 times
                     if random.random() < 0.1 and not new_genome[y][x] == "|":  # Chance to be the opposite
                         continue
                     new_genome[y][x] = other.genome[y][x]
