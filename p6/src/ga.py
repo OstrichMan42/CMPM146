@@ -535,7 +535,7 @@ def generate_successors(population):
     # Elitist
     results = sorted(results, key=Individual.fitness)
     i = 0
-    while results[i].fitness < population[i].fitness:
+    while results[i].fitness() < population[i].fitness():
         results[i] = population[i]
         i += 1
 
