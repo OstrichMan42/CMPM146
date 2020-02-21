@@ -108,7 +108,7 @@ class Individual_Grid(object):
         # STUDENT Modify this, and possibly add more metrics.  You can replace this with whatever code you like.
         coefficients = dict(
             meaningfulJumpVariance=1.5,
-            negativeSpace=0.6,
+            negativeSpace=1,
             pathPercentage=0.5,
             emptyPercentage=0.6,
             linearity=-0.5,
