@@ -523,7 +523,7 @@ Individual = Individual_Grid
 def generate_successors(population):
     results = []
     # Tournament
-    TOURNAMENT_SIZE = 16
+    TOURNAMENT_SIZE = 8
     PROBABILITY = 0.8
 
     for j in range(len(population)):
